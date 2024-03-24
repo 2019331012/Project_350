@@ -1,7 +1,7 @@
 <h1>Finance App</h1>
 
 <h3>
-this project we create an awesome  Finance App UI and backend, hellll yeahhhhhhh korlam eita 4th
+this project we create an awesome  Finance App UI and backend, hellll yeahhhhhhh korlam eita 4th, by pedo utsho and robot fahim.
 </h3>
 <p>
 tutorial :
