@@ -1,7 +1,7 @@
 <h1>Finance App</h1>
 
 <h3>
-this project i creat an awesome  Finance App UI and backend, hellll yeahhhhhhh korlam
+this project i creat an awesome  Finance App UI and backend, hellll yeahhhhhhh korlam 3rd bar
 </h3>
 <p>
 tutorial :
