@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:managment/Screens/change_name.dart';
 import 'package:managment/Screens/change_pass.dart'; // Make sure to import necessary dependencies
 
 class Profile extends StatelessWidget {
@@ -33,6 +34,14 @@ class Profile extends StatelessWidget {
                     onTap: () {
                       // Navigate to the screen where user can change their name
                       // You can implement this navigation logic according to your app's navigation stack
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangeName(),
+                        ),
+                      );
+
                     },
                   ),
                   Divider(),

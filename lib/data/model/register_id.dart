@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:managment/savecred.dart';
+import 'package:provider/provider.dart';
 
 final Logger logger = Logger();
 
@@ -58,6 +61,19 @@ class HiveAdapter {
     }
     return false;
   }
+
+  static void changeName(BuildContext context, String email, String oldName, String newName) {
+    final Map<String, String>? userData = getCredentials(email);
+    if (userData != null) {
+      userData['name'] = newName;
+      credentialsBox.put(email, userData);
+
+      // Obtain the UserCredProvider using Provider.of
+      final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+      userCredProvider.setCred(userData);
+    }
+  }
+
 
   static printAllCredentials() {
     logger.d('Full Credentials Information : ( ${credentialsBox.keys.toList()} :  )credentialsBox');
