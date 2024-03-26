@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
               width: double.infinity,
               height: 240,
               decoration: BoxDecoration(
-                color: Color(0xff368983),
+                color: Color(0xFF603300),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
@@ -187,10 +187,10 @@ class _HomeState extends State<Home> {
         ),
         Positioned(
           top: 140,
-          left: 37,
+          left: 30,
           child: Container(
             height: 170,
-            width: 320,
+            width: 260,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -200,7 +200,7 @@ class _HomeState extends State<Home> {
                   spreadRadius: 6,
                 ),
               ],
-              color: Color.fromARGB(255, 47, 125, 121),
+              color: Color(0xFF361500),
               borderRadius: BorderRadius.circular(15),
             ),
             child: Column(
@@ -252,7 +252,7 @@ class _HomeState extends State<Home> {
                         children: [
                           CircleAvatar(
                             radius: 13,
-                            backgroundColor: Color.fromARGB(255, 85, 145, 141),
+                            backgroundColor: Color(0xFF603300),
                             child: Icon(
                               Icons.arrow_downward,
                               color: Colors.white,
@@ -274,7 +274,7 @@ class _HomeState extends State<Home> {
                         children: [
                           CircleAvatar(
                             radius: 13,
-                            backgroundColor: Color.fromARGB(255, 85, 145, 141),
+                            backgroundColor:  Color(0xFF603300),
                             child: Icon(
                               Icons.arrow_upward,
                               color: Colors.white,

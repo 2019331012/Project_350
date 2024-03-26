@@ -47,7 +47,7 @@ class _ChartState extends State<Chart> {
         primaryXAxis: CategoryAxis(),
         series: <SplineSeries<SalesData, String>>[
           SplineSeries<SalesData, String>(
-            color: Color.fromARGB(255, 47, 125, 121),
+            color: Color(0xFF603300),
             width: 3,
             dataSource: <SalesData>[
               ...List.generate(time(a!, b ? true : false).length, (index) {
