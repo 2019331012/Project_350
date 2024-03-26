@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:managment/Screens/add.dart';
 import 'package:managment/Screens/home.dart';
 import 'package:managment/Screens/statistics.dart';
+import 'package:managment/Screens/profile.dart';
 
 class Bottom extends StatefulWidget {
 
@@ -24,7 +25,7 @@ class _BottomState extends State<Bottom> {
       Home(name: widget.name),
       Statistics(),
       Home(name: widget.name),
-      Statistics(),
+      Profile(),
     ];
   }
 
