@@ -167,12 +167,12 @@ class _Add_ScreenState extends State<Add_Screen> {
                 selctedItemi = _itemei[0];
               });
             },
-            style: ElevatedButton.styleFrom(
-              primary: selctedItemi == _itemei[0] ? Colors.green : Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
+            // style: ElevatedButton.styleFrom(
+            //   primary: selctedItemi == _itemei[0] ? Colors.green : Colors.white,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            // ),
             child: Text(_itemei[0]),
           ),
           ElevatedButton(
@@ -181,12 +181,12 @@ class _Add_ScreenState extends State<Add_Screen> {
                 selctedItemi = _itemei[1];
               });
             },
-            style: ElevatedButton.styleFrom(
-              primary: selctedItemi == _itemei[1] ? Colors.red : Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
+            // style: ElevatedButton.styleFrom(
+            //   primary: selctedItemi == _itemei[1] ? Colors.red : Colors.white,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            // ),
             child: Text(_itemei[1]),
           ),
         ],
