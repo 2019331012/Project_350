@@ -53,6 +53,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       // Perform password change logic here (e.g., call API or update database)
       // After successful password change, show success message
 
+      logger.d('LogginCredentials is $loggedInCred');
       bool x = HiveAdapter.changePassword(loggedInCred?['email'] ?? '', oldPassword, newPassword);
 
       if(!x){

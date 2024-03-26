@@ -198,13 +198,17 @@ class _MyLoginState extends State<MyLogin> {
       String? savedEmail = HiveAdapter.getEmail(email.text.trim());
       String? savedPassword = HiveAdapter.getPassword(email.text.trim());
       String savedName = HiveAdapter.getName(email.text.trim());
+      HiveAdapter.printAllCredentials();
       Map<String, String> savedCredentials = HiveAdapter.getCredentials(email.text.trim()) != null ? HiveAdapter.getCredentials(email.text.trim())! : {};
+      logger.d(' In Login Credentials for $email: $savedCredentials');
 
       if (savedEmail != null && savedPassword != null && password.text == savedPassword) {
         // Login successful, navigate to home screen
 
         final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
         userCredProvider.setCred(savedCredentials);
+
+        logger.d(' Finalized Login Credentials for ${email.text}: ${savedCredentials}  is ${userCredProvider.cred}');
 
 
         Navigator.push(

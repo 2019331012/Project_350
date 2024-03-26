@@ -5,12 +5,12 @@ import 'package:logger/logger.dart';
 final Logger logger = Logger();
 
 class HiveAdapter {
-  static late Box<Map<String, String>> credentialsBox;
+  static final credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
 
   static Future<void> initialize() async {
     await Hive.initFlutter();
     await Hive.openBox<Map<String, String>>('credentialsBox');
-    credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
+    //credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
   }
 
   static void saveCredentials(String name, String email, String password) {
@@ -58,5 +58,17 @@ class HiveAdapter {
     }
     return false;
   }
+
+  static printAllCredentials() {
+    logger.d('Full Credentials Information : ( ${credentialsBox.keys.toList()} :  )credentialsBox');
+    //logger.d('Full Credentials Information : ( ${credentialsBox.values.toList()} :  )credentialsBox');
+    // final keys = HiveAdapter.credentialsBox.keys.toList();
+    // for (var key in keys) {
+    //   final credentials = HiveAdapter.credentialsBox.get(key);
+    //   print('Key: $key, Value: $credentials');
+    // }
+    
+  }
+
 
 }

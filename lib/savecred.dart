@@ -5,7 +5,7 @@ class UserCredProvider extends ChangeNotifier {
 
   Map<String, String>? get cred => _cred;
 
-  void setCred(Map<String, String>? email) {
+  void setCred(Map<String, String>? cred) {
     _cred = cred;
     notifyListeners();
   }
