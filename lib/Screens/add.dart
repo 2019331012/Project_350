@@ -69,13 +69,13 @@ class _Add_ScreenState extends State<Add_Screen> {
       child: Column(
         children: [
           SizedBox(height: 50),
-          name(),
+          How(),
           SizedBox(height: 30),
-          explain(),
+          name(),
           SizedBox(height: 30),
           amount(),
           SizedBox(height: 30),
-          How(),
+          explain(),
           SizedBox(height: 30),
           date_time(),
           Spacer(),
@@ -146,60 +146,54 @@ class _Add_ScreenState extends State<Add_Screen> {
   }
 
   Padding How() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        width: 300,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            width: 2,
-            color: Color(0xffC5C5C5),
-          ),
-        ),
-        child: DropdownButton<String>(
-          value: selctedItemi,
-          onChanged: ((value) {
-            setState(() {
-              selctedItemi = value!;
-            });
-          }),
-          items: _itemei
-              .map((e) => DropdownMenuItem(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Row(
-                        children: [
-                          Text(
-                            e,
-                            style: TextStyle(fontSize: 18),
-                          )
-                        ],
-                      ),
-                    ),
-                    value: e,
-                  ))
-              .toList(),
-          selectedItemBuilder: (BuildContext context) => _itemei
-              .map((e) => Row(
-                    children: [Text(e)],
-                  ))
-              .toList(),
-          hint: Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(
-              'How',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-          dropdownColor: Colors.white,
-          isExpanded: true,
-          underline: Container(),
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15),
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      width: 300,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          width: 0,
+          color: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
-    );
-  }
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                selctedItemi = _itemei[0];
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              primary: selctedItemi == _itemei[0] ? Colors.green : Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text(_itemei[0]),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                selctedItemi = _itemei[1];
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              primary: selctedItemi == _itemei[1] ? Colors.red : Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text(_itemei[1]),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Padding amount() {
     return Padding(
@@ -300,7 +294,7 @@ class _Add_ScreenState extends State<Add_Screen> {
           hint: Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Text(
-              'Name',
+              'Category',
               style: TextStyle(color: Colors.grey),
             ),
           ),
