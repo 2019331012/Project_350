@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart'; // Make sure to import necessary dependencies
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:managment/Screens/change_pass.dart'; // Make sure to import necessary dependencies
 
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
@@ -39,6 +40,13 @@ class Profile extends StatelessWidget {
                     leading: Icon(Icons.lock),
                     title: Text('Change Password'),
                     onTap: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangePassword(),
+                        ),
+                      );
                       // Navigate to the screen where user can change their password
                       // You can implement this navigation logic according to your app's navigation stack
                     },

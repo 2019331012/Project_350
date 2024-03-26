@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:managment/Screens/register.dart';
+import 'package:managment/data/model/register_id.dart';
+import 'package:managment/savecred.dart';
 import 'package:managment/widgets/bottomnavigationbar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -195,13 +198,19 @@ class _MyLoginState extends State<MyLogin> {
       String? savedEmail = HiveAdapter.getEmail(email.text.trim());
       String? savedPassword = HiveAdapter.getPassword(email.text.trim());
       String savedName = HiveAdapter.getName(email.text.trim());
+      Map<String, String> savedCredentials = HiveAdapter.getCredentials(email.text.trim()) != null ? HiveAdapter.getCredentials(email.text.trim())! : {};
 
       if (savedEmail != null && savedPassword != null && password.text == savedPassword) {
         // Login successful, navigate to home screen
+
+        final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+        userCredProvider.setCred(savedCredentials);
+
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (BuildContext context) {
-            return Bottom(name: savedName);
+            return Bottom();
           }),
         );
       } else {

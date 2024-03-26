@@ -4,14 +4,16 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:managment/data/listdata.dart';
 import 'package:managment/data/model/add_date.dart';
 import 'package:managment/data/utlity.dart';
+import 'package:managment/savecred.dart';
+import 'package:provider/provider.dart';
 
 
 
 class Home extends StatefulWidget {
   
-  final String name;
+  //final Map<String, String> cred;
   
-  const Home({Key? key, required this.name}) : super(key: key);
+  const Home(/*{Key? key, required this.cred}*/{Key? key}) : super(key: key);
 
 
   @override
@@ -30,8 +32,19 @@ class _HomeState extends State<Home> {
     'saturday',
     'sunday'
   ];
+
+  late Map<String, String>? loggedInCred;
+
+  @override
+  void initState() {
+    super.initState();
+    final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+    loggedInCred = userCredProvider.cred;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
           child: ValueListenableBuilder(
@@ -170,7 +183,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Text(
-                          widget.name,
+                          loggedInCred?['name'] ?? 'Guest',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,

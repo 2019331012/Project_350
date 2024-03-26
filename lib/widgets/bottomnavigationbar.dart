@@ -6,9 +6,9 @@ import 'package:managment/Screens/profile.dart';
 
 class Bottom extends StatefulWidget {
 
-  final String name;
+  //final Map<String, String> cred;
 
-  const Bottom({Key? key, required this.name}) : super(key: key);
+  const Bottom(/*{Key? key, required this.cred}*/{Key? key}) : super(key: key);
 
   @override
   State<Bottom> createState() => _BottomState();
@@ -22,9 +22,9 @@ class _BottomState extends State<Bottom> {
   void initState() {
     super.initState();
     screens = [
-      Home(name: widget.name),
+      Home(),
       Statistics(),
-      Home(name: widget.name),
+      Home(),
       Profile(),
     ];
   }

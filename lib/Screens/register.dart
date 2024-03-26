@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:managment/data/model/register_id.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -280,40 +281,6 @@ class _MyRegisterState extends State<MyRegister> {
       );
     }
   }
-}
-
-class HiveAdapter {
-  static late Box<Map<String, String>> credentialsBox;
-
-  static Future<void> initialize() async {
-    await Hive.initFlutter();
-    await Hive.openBox<Map<String, String>>('credentialsBox');
-    credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
-  }
-
-  static void saveCredentials(String name, String email, String password) {
-    final credentials = {'name': name, 'password': password};
-    credentialsBox.put(email, credentials);
-  }
-
-  static Map<String, String>? getCredentials(String email) {
-    return credentialsBox.get(email);
-  }
-
-  static String getName(String email) {
-    final Map<String, String>? userData = credentialsBox.get(email);
-    return userData != null && userData.containsKey('name') ? userData['name'] ?? '' : '';
-  }
-  
-  static String? getPassword(String email) {
-    final Map<String, String>? userData = credentialsBox.get(email);
-    return userData != null && userData.containsKey('password') ? userData['password'] ?? '' : '';
-  }
-  
-  static String? getEmail(String email) {
-    return credentialsBox.containsKey(email) ? email : null;
-  }
-
 }
 
 
