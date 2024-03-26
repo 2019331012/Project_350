@@ -84,8 +84,9 @@ class _HomeState extends State<Home> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          history = box.values.toList()[index];
-                          return getList(history, index);
+                          int reversedIndex = box.length - 1 - index;
+                          history = box.values.toList()[reversedIndex];
+                          return getList(history, reversedIndex);
                         },
                         childCount: box.length,
                       ),
