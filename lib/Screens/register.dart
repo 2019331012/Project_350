@@ -292,7 +292,7 @@ class HiveAdapter {
   }
 
   static void saveCredentials(String name, String email, String password) {
-    final credentials = {'name': name, 'email': email, 'password': password};
+    final credentials = {'name': name, 'password': password};
     credentialsBox.put(email, credentials);
   }
 
@@ -306,8 +306,8 @@ class HiveAdapter {
   }
   
   static String? getPassword(String email) {
-    Map<String, String>? x = credentialsBox.get(email);
-    return x?['password'];
+    final Map<String, String>? userData = credentialsBox.get(email);
+    return userData != null && userData.containsKey('password') ? userData['password'] ?? '' : '';
   }
   
   static String? getEmail(String email) {

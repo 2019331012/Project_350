@@ -4,44 +4,59 @@ import 'package:hive_flutter/hive_flutter.dart'; // Make sure to import necessar
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
 
+  // Function to handle logout
+  Future<void> logout(BuildContext context) async {
+    // Perform logout operation
+    //await Hive.box('user_data').clear(); // Clear user data from Hive (if you are using Hive for storage)
+
+    // Navigate to the login screen and clear the route stack
+    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the screen where user can change their name
-                // You can implement this navigation logic according to your app's navigation stack
-              },
-              child: Text('Change Name'),
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('Change Name'),
+                    onTap: () {
+                      // Navigate to the screen where user can change their name
+                      // You can implement this navigation logic according to your app's navigation stack
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.lock),
+                    title: Text('Change Password'),
+                    onTap: () {
+                      // Navigate to the screen where user can change their password
+                      // You can implement this navigation logic according to your app's navigation stack
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.exit_to_app),
+                    title: Text('Logout'),
+                    onTap: () async {
+                      // Call the logout function when "Logout" is tapped
+                      await logout(context);
+                    },
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the screen where user can change their password
-                // You can implement this navigation logic according to your app's navigation stack
-              },
-              child: Text('Change Password'),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                // Perform logout operation
-                // For example, you can clear user data and navigate to login screen
-                await Hive.box('user_data').clear(); // Clear user data from Hive (if you are using Hive for storage)
-                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // Navigate to login screen and clear the route stack
-              },
-              child: Text('Logout'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
