@@ -168,7 +168,7 @@ class _Add_ScreenState extends State<Add_Screen> {
               });
             },
             style: ElevatedButton.styleFrom(
-              primary: selctedItemi == _itemei[0] ? Colors.green : Colors.white,
+              backgroundColor: selctedItemi == _itemei[0] ? Colors.green : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -182,7 +182,7 @@ class _Add_ScreenState extends State<Add_Screen> {
               });
             },
             style: ElevatedButton.styleFrom(
-              primary: selctedItemi == _itemei[1] ? Colors.red : Colors.white,
+              backgroundColor: selctedItemi == _itemei[1] ? Colors.red : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
