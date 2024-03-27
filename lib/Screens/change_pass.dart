@@ -27,7 +27,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
 
   // Function to handle changing the password
-  void changePassword() {
+  Future<void> changePassword() async {
     String oldPassword = oldPasswordController.text.trim();
     String newPassword = newPasswordController.text.trim();
     String confirmNewPassword = confirmNewPasswordController.text.trim();
@@ -64,6 +64,9 @@ class _ChangePasswordState extends State<ChangePassword> {
           ),
         );
       } else{
+
+        await logout(context);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Password changed successfully'),
@@ -110,9 +113,12 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
             SizedBox(height: 32),
             ElevatedButton(
-              onPressed: changePassword,
+              onPressed: () async {
+                changePassword();
+              },
               child: Text('Change Password'),
             ),
+
           ],
         ),
       ),
@@ -125,5 +131,9 @@ class _ChangePasswordState extends State<ChangePassword> {
     newPasswordController.dispose();
     confirmNewPasswordController.dispose();
     super.dispose();
+  }
+  
+  Future<void> logout(BuildContext context) async {
+    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
   }
 }
