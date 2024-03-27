@@ -76,7 +76,7 @@ class HiveAdapter {
 
   static printAllCredentials() {
     logger.d('Full Credentials Information : ( ${credentialsBox.keys.toList()} :  )credentialsBox');
-    //logger.d('Full Credentials Information : ( ${credentialsBox.values.toList()} :  )credentialsBox');
+    logger.d('Full Credentials Information : ( ${credentialsBox.values.toList()} :  )credentialsBox');
     // final keys = HiveAdapter.credentialsBox.keys.toList();
     // for (var key in keys) {
     //   final credentials = HiveAdapter.credentialsBox.get(key);
