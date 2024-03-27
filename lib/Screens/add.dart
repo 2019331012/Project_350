@@ -289,7 +289,7 @@ class _Add_ScreenState extends State<Add_Screen> {
                 value: 'custom',
                 child: Row(
                   children: [
-                    Image.asset('images/Custom.png', width: 40), // Add the custom icon here
+                    Image.asset('images/custom.png', width: 40), // Add the custom icon here
                     SizedBox(width: 10),
                     Text('Custom'),
                   ],
@@ -309,7 +309,7 @@ class _Add_ScreenState extends State<Add_Screen> {
               )).toList(),
               Row(
                 children: [
-                  Image.asset('images/Custom.png', width: 42), // Add the custom icon here
+                  Image.asset('images/custom.png', width: 42), // Add the custom icon here
                   SizedBox(width: 5),
                   Text('Custom')
                 ],
