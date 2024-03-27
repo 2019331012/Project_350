@@ -6,6 +6,7 @@ import 'package:managment/data/model/add_date.dart';
 import 'package:managment/data/utlity.dart';
 import 'package:managment/savecred.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 
 
@@ -23,6 +24,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var history;
   final box = Hive.box<Add_data>('data');
+  void clearData() {
+    box.clear();
+  }
   final List<String> day = [
     'Monday',
     "Tuesday",
@@ -105,36 +109,55 @@ class _HomeState extends State<Home> {
         },
         child: get(index, history));
   }
+  Future<bool> _imageExists(String imagePath) async {
+  try {
+    // Check if the image file exists
+    await rootBundle.load(imagePath);
+    return true;
+  } catch (error) {
+    return false;
+  }
+  }
 
   ListTile get(int index, Add_data history) {
-    return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: Image.asset('images/${history.name}.png', height: 40),
+  String imagePath = 'images/${history.name}.png';
+  
+  // Check if the image exists, if not, use the default image
+  _imageExists(imagePath).then((exists) {
+    if (!exists) {
+      imagePath = 'images\custom.png';
+    }
+  });
+
+  return ListTile(
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Image.asset(imagePath, height: 40),
+    ),
+    title: Text(
+      history.name,
+      style: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w600,
       ),
-      title: Text(
-        history.name,
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-        ),
+    ),
+    subtitle: Text(
+      '${day[history.datetime.weekday - 1]}  ${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
+      style: TextStyle(
+        fontWeight: FontWeight.w600,
       ),
-      subtitle: Text(
-        '${day[history.datetime.weekday - 1]}  ${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
+    ),
+    trailing: Text(
+      history.amount,
+      style: TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 19,
+        color: history.IN == 'Income' ? Colors.green : Colors.red,
       ),
-      trailing: Text(
-        history.amount,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 19,
-          color: history.IN == 'Income' ? Colors.green : Colors.red,
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _head() {
     return Stack(

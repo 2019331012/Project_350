@@ -133,7 +133,7 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor: Color(0xff4c505b),
+                                backgroundColor: Color(0xFF603300),
                                 child: IconButton(
                                   color: Colors.white,
                                   onPressed: () {
@@ -161,7 +161,7 @@ class _MyLoginState extends State<MyLogin> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     decoration: TextDecoration.underline,
-                                    color: Color(0xff4c505b),
+                                    color: Color(0xFF603300),
                                     fontSize: 18,
                                   ),
                                 ),
@@ -173,7 +173,7 @@ class _MyLoginState extends State<MyLogin> {
                                   'Forgot Password',
                                   style: TextStyle(
                                     decoration: TextDecoration.underline,
-                                    color: Color(0xff4c505b),
+                                    color: Color(0xFF603300),
                                     fontSize: 18,
                                   ),
                                 ),

@@ -79,7 +79,7 @@ class _MyRegisterState extends State<MyRegister> {
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
-                                  color: Colors.white,
+                                  color: Colors.grey.shade100,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -105,7 +105,7 @@ class _MyRegisterState extends State<MyRegister> {
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
-                                  color: Colors.white,
+                                  color: Colors.grey.shade100,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -115,7 +115,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 ),
                               ),
                               hintText: "Email",
-                              hintStyle: TextStyle(color: Colors.white),
+                              hintStyle: TextStyle(color: Colors.grey.shade100),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -126,7 +126,7 @@ class _MyRegisterState extends State<MyRegister> {
                           ),
                           TextField(
                             controller: passwordController,
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.grey.shade100),
                             obscureText: true,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
@@ -164,7 +164,7 @@ class _MyRegisterState extends State<MyRegister> {
                               ),
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor: Color(0xff4c505b),
+                                backgroundColor: Color(0xFF603300),
                                 child: IconButton(
                                   color: Colors.white,
                                   onPressed: () {
@@ -192,7 +192,7 @@ class _MyRegisterState extends State<MyRegister> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     decoration: TextDecoration.underline,
-                                    color: Colors.white,
+                                    color: Color(0xFF603300),
                                     fontSize: 18,
                                   ),
                                 ),

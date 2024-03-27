@@ -41,22 +41,25 @@ class _Add_ScreenState extends State<Add_Screen> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      body: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            background_container(context),
-            Positioned(
-              top: 120,
+  return Scaffold(
+    backgroundColor: Colors.grey.shade100,
+    body: SafeArea(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          background_container(context),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100), // Adjust this padding as needed
               child: main_container(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Container main_container() {
     return Container(
@@ -64,7 +67,7 @@ class _Add_ScreenState extends State<Add_Screen> {
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      height: 550,
+      height: 600,
       width: 340,
       child: Column(
         children: [
@@ -217,6 +220,7 @@ class _Add_ScreenState extends State<Add_Screen> {
     );
   }
 
+
   Padding explain() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -239,72 +243,113 @@ class _Add_ScreenState extends State<Add_Screen> {
   }
 
   Padding name() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        width: 300,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            width: 2,
-            color: Color(0xffC5C5C5),
-          ),
-        ),
-        child: DropdownButton<String>(
-          value: selctedItem,
-          onChanged: ((value) {
-            setState(() {
-              selctedItem = value!;
-            });
-          }),
-          items: _item
-              .map((e) => DropdownMenuItem(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 40,
-                            child: Image.asset('images/${e}.png'),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            e,
-                            style: TextStyle(fontSize: 18),
-                          )
-                        ],
-                      ),
-                    ),
-                    value: e,
-                  ))
-              .toList(),
-          selectedItemBuilder: (BuildContext context) => _item
-              .map((e) => Row(
-                    children: [
-                      Container(
-                        width: 42,
-                        child: Image.asset('images/${e}.png'),
-                      ),
-                      SizedBox(width: 5),
-                      Text(e)
-                    ],
-                  ))
-              .toList(),
-          hint: Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(
-              'Category',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-          dropdownColor: Colors.white,
-          isExpanded: true,
-          underline: Container(),
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15),
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      width: 300,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          width: 2,
+          color: Color(0xffC5C5C5),
         ),
       ),
-    );
-  }
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DropdownButton<String>(
+            value: selctedItem,
+            onChanged: ((value) {
+              setState(() {
+                selctedItem = value!;
+              });
+            }),
+            items: [
+              ..._item.map((e) => DropdownMenuItem(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        child: Image.asset('images/${e}.png'),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        e,
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  ),
+                ),
+                value: e,
+              )).toList(),
+              DropdownMenuItem(
+                value: 'custom',
+                child: Row(
+                  children: [
+                    Image.asset('images/Custom.png', width: 40), // Add the custom icon here
+                    SizedBox(width: 10),
+                    Text('Custom'),
+                  ],
+                ),
+              ),
+            ],
+            selectedItemBuilder: (BuildContext context) => [
+              ..._item.map((e) => Row(
+                children: [
+                  Container(
+                    width: 42,
+                    child: Image.asset('images/${e}.png'),
+                  ),
+                  SizedBox(width: 5),
+                  Text(e)
+                ],
+              )).toList(),
+              Row(
+                children: [
+                  Image.asset('images/Custom.png', width: 42), // Add the custom icon here
+                  SizedBox(width: 5),
+                  Text('Custom')
+                ],
+              ),
+            ],
+            hint: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                'Category',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            dropdownColor: Colors.white,
+            isExpanded: true,
+            underline: Container(),
+          ),
+          if (selctedItem == 'custom') ...[
+            SizedBox(height: 10),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Custom Category',
+                labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(width: 2, color: Color(0xff368983)),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
+}
+
+
 
   Column background_container(BuildContext context) {
     return Column(
