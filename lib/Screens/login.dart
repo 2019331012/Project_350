@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:managment/Screens/register.dart';
 import 'package:managment/data/model/register_id.dart';
 import 'package:managment/savecred.dart';
 import 'package:managment/widgets/bottomnavigationbar.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 class MyLogin extends StatefulWidget {
