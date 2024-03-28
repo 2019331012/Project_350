@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:managment/data/model/register_id.dart';
-import 'package:managment/savecred.dart';
+import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
 
 class ChangeName extends StatefulWidget {

@@ -18,7 +18,8 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('   Profile'),
+        automaticallyImplyLeading: false, // Remove the back arrow
       ),
       body: CustomScrollView(
         slivers: [
@@ -40,7 +41,6 @@ class Profile extends StatelessWidget {
                           builder: (context) => ChangeName(),
                         ),
                       );
-
                     },
                   ),
                   Divider(),
@@ -48,7 +48,6 @@ class Profile extends StatelessWidget {
                     leading: Icon(Icons.lock),
                     title: Text('Change Password'),
                     onTap: () {
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(

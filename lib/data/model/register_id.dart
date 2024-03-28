@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:managment/savecred.dart';
+import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
 
 final Logger logger = Logger();
 
 class HiveAdapter {
-  static final credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
+  static late final credentialsBox; //= Hive.box<Map<String, String>>('credentialsBox');
 
   static Future<void> initialize() async {
     await Hive.initFlutter();
     await Hive.openBox<Map<String, String>>('credentialsBox');
-    //credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
+    credentialsBox = Hive.box<Map<String, String>>('credentialsBox');
   }
 
   static void saveCredentials(String name, String email, String password) {

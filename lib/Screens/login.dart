@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:managment/data/model/register_id.dart';
-import 'package:managment/savecred.dart';
-import 'package:managment/widgets/bottomnavigationbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+//import 'package:managment/data/model/register_id.dart'; // Assuming this is for user registration
+import 'package:managment/widgets/bottomnavigationbar.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -19,22 +19,16 @@ class _MyLoginState extends State<MyLogin> {
   @override
   void initState() {
     super.initState();
-    HiveAdapter.initialize(); // Initialize HiveAdapter
     getData();
   }
 
   void getData() async {
-    // String? savedEmail = await HiveAdapter.getEmail();
-    // String? savedPassword = await HiveAdapter.getPassword();
-
-    // if (savedEmail != null && savedPassword != null) {
-    //   email.text = savedEmail;
-    //   password.text = savedPassword;
-    //   isChecked = true;
-    //   setState(() {});
-    // }
+    // You can add any initial data fetching logic here if needed
     isChecked = true;
-    setState(() {});
+    setState(() {
+
+
+    });
   }
 
   @override
@@ -165,7 +159,9 @@ class _MyLoginState extends State<MyLogin> {
                                 style: ButtonStyle(),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // Add forgot password logic here
+                                },
                                 child: Text(
                                   'Forgot Password',
                                   style: TextStyle(
@@ -190,24 +186,15 @@ class _MyLoginState extends State<MyLogin> {
     );
   }
 
-  void login() {
-    if (email.text.isNotEmpty && password.text.isNotEmpty) {
-      String? savedEmail = HiveAdapter.getEmail(email.text.trim());
-      String? savedPassword = HiveAdapter.getPassword(email.text.trim());
-      String savedName = HiveAdapter.getName(email.text.trim());
-      HiveAdapter.printAllCredentials();
-      Map<String, String> savedCredentials = HiveAdapter.getCredentials(email.text.trim()) != null ? HiveAdapter.getCredentials(email.text.trim())! : {};
-      logger.d(' In Login Credentials for $email: $savedCredentials');
+  void login() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.text.trim(),
+        password: password.text,
+      );
 
-      if (savedEmail != null && savedPassword != null && password.text == savedPassword) {
+      if (userCredential.user != null) {
         // Login successful, navigate to home screen
-
-        final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
-        userCredProvider.setCred(savedCredentials);
-
-        logger.d(' Finalized Login Credentials for ${email.text}: ${savedCredentials}  is ${userCredProvider.cred}');
-
-
         Navigator.push(
           context,
           MaterialPageRoute(builder: (BuildContext context) {
@@ -215,7 +202,7 @@ class _MyLoginState extends State<MyLogin> {
           }),
         );
       } else {
-        // Invalid credentials, show error message
+        // Handle error or show error message
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -234,14 +221,14 @@ class _MyLoginState extends State<MyLogin> {
           },
         );
       }
-    } else {
-      // Fields are empty, show error message
+    } catch (e) {
+      // Handle error or show error message
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Please enter email and password'),
+            content: Text('An error occurred. Please try again later.\n $e'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -255,5 +242,4 @@ class _MyLoginState extends State<MyLogin> {
       );
     }
   }
-
 }
