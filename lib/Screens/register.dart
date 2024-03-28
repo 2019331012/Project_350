@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:managment/data/model/register_id.dart';
+//import 'package:managment/data/model/register_id.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -211,14 +213,46 @@ class _MyRegisterState extends State<MyRegister> {
     );
   }
 
-  void register() {
+
+
+  void register() async {
     String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text;
 
-    if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
-      // Check if the email already exists in the database
-      if (HiveAdapter.getEmail(email) != null) {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // If registration is successful, you can save additional user data to Firebase Firestore or Realtime Database
+      // For example, to save the user's name:
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+        'name': name,
+      });
+
+      // Show success message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Success'),
+            content: Text('User registered successfully'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        // Show error message if email is already registered
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -237,16 +271,13 @@ class _MyRegisterState extends State<MyRegister> {
           },
         );
       } else {
-        // Save new user credentials to Hive
-        HiveAdapter.saveCredentials(name, email, password);
-
-        // Show success message
+        // Show generic error message
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Success'),
-              content: Text('User registered successfully'),
+              title: Text('Error'),
+              content: Text('Registration failed. Please try again later.\n $e'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -259,27 +290,80 @@ class _MyRegisterState extends State<MyRegister> {
           },
         );
       }
-    } else {
-      // Show error message if any field is empty
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please enter all fields'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
     }
   }
 }
+
+
+//   void register() {
+//     String name = nameController.text.trim();
+//     String email = emailController.text.trim();
+//     String password = passwordController.text;
+
+//     if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+//       // Check if the email already exists in the database
+//       if (HiveAdapter.getEmail(email) != null) {
+//         showDialog(
+//           context: context,
+//           builder: (BuildContext context) {
+//             return AlertDialog(
+//               title: Text('Error'),
+//               content: Text('Email already registered'),
+//               actions: [
+//                 TextButton(
+//                   onPressed: () {
+//                     Navigator.of(context).pop();
+//                   },
+//                   child: Text('OK'),
+//                 ),
+//               ],
+//             );
+//           },
+//         );
+//       } else {
+//         // Save new user credentials to Hive
+//         HiveAdapter.saveCredentials(name, email, password);
+
+//         // Show success message
+//         showDialog(
+//           context: context,
+//           builder: (BuildContext context) {
+//             return AlertDialog(
+//               title: Text('Success'),
+//               content: Text('User registered successfully'),
+//               actions: [
+//                 TextButton(
+//                   onPressed: () {
+//                     Navigator.of(context).pop();
+//                   },
+//                   child: Text('OK'),
+//                 ),
+//               ],
+//             );
+//           },
+//         );
+//       }
+//     } else {
+//       // Show error message if any field is empty
+//       showDialog(
+//         context: context,
+//         builder: (BuildContext context) {
+//           return AlertDialog(
+//             title: Text('Error'),
+//             content: Text('Please enter all fields'),
+//             actions: [
+//               TextButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text('OK'),
+//               ),
+//             ],
+//           );
+//         },
+//       );
+//     }
+//   }
+// }
 
 
