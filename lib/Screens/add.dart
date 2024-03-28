@@ -61,33 +61,73 @@ class _Add_ScreenState extends State<Add_Screen> {
 }
 
 
+  // Container main_container() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(20),
+  //       color: Colors.white,
+  //     ),
+  //     height: 600,
+  //     width: 340,
+  //     child: Column(
+  //       children: [
+  //         SizedBox(height: 50),
+  //         How(),
+  //         SizedBox(height: 30),
+  //         name(),
+  //         SizedBox(height: 30),
+  //         amount(),
+  //         SizedBox(height: 30),
+  //         explain(),
+  //         SizedBox(height: 30),
+  //         date_time(),
+  //         Spacer(),
+  //         save(),
+  //         SizedBox(height: 25),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Container main_container() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      height: 600,
+      height: 200, // Reduced height for the row layout
       width: 340,
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align columns evenly
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 50),
-          How(),
-          SizedBox(height: 30),
-          name(),
-          SizedBox(height: 30),
-          amount(),
-          SizedBox(height: 30),
-          explain(),
-          SizedBox(height: 30),
-          date_time(),
-          Spacer(),
-          save(),
-          SizedBox(height: 25),
+          Expanded(
+            flex: 3, // Flex for Amount widget
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                amount(),
+                SizedBox(height: 10), // Adjust spacing as needed
+                date_time(),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 4, // Flex for Explain widget
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                explain(),
+                SizedBox(height: 10), // Adjust spacing as needed
+                save(),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+
 
   GestureDetector save() {
     return GestureDetector(

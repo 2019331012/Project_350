@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:managment/Screens/change_name.dart';
 import 'package:managment/Screens/change_pass.dart'; // Make sure to import necessary dependencies
@@ -11,6 +12,7 @@ class Profile extends StatelessWidget {
     //await Hive.box('user_data').clear(); // Clear user data from Hive (if you are using Hive for storage)
 
     // Navigate to the login screen and clear the route stack
+    await FirebaseAuth.instance.signOut();
     Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
   }
 

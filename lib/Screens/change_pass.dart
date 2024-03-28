@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:managment/data/model/register_id.dart';
 import 'package:managment/data/savecred.dart';
@@ -27,14 +28,13 @@ class _ChangePasswordState extends State<ChangePassword> {
 
 
   // Function to handle changing the password
+
   Future<void> changePassword() async {
     String oldPassword = oldPasswordController.text.trim();
     String newPassword = newPasswordController.text.trim();
     String confirmNewPassword = confirmNewPasswordController.text.trim();
 
-    // Add your validation logic here
     if (oldPassword.isEmpty || newPassword.isEmpty || confirmNewPassword.isEmpty) {
-      // Show error message if any field is empty
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please fill in all fields'),
@@ -42,7 +42,6 @@ class _ChangePasswordState extends State<ChangePassword> {
         ),
       );
     } else if (newPassword != confirmNewPassword) {
-      // Show error message if new passwords do not match
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('New passwords do not match'),
@@ -50,38 +49,101 @@ class _ChangePasswordState extends State<ChangePassword> {
         ),
       );
     } else {
-      // Perform password change logic here (e.g., call API or update database)
-      // After successful password change, show success message
+      try {
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          // Re-authenticate the user to ensure the old password is correct
+          AuthCredential credential = EmailAuthProvider.credential(email: user.email!, password: oldPassword);
+          await user.reauthenticateWithCredential(credential);
 
-      logger.d('LogginCredentials is $loggedInCred');
-      bool x = HiveAdapter.changePassword(loggedInCred?['email'] ?? '', oldPassword, newPassword);
+          // Change the user's password
+          await user.updatePassword(newPassword);
 
-      if(!x){
+          // Logout after password change
+          await FirebaseAuth.instance.signOut();
+
+          Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Password changed successfully'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+
+          // Clear text fields after successful password change
+          oldPasswordController.clear();
+          newPasswordController.clear();
+          confirmNewPasswordController.clear();
+        } else {
+          throw Exception('User not authenticated');
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Old password do not match'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } else{
-
-        await logout(context);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Password changed successfully'),
+            content: Text('Error changing password: $e'),
             duration: Duration(seconds: 2),
           ),
         );
       }
-
-      
-      // Clear text fields after successful password change
-      oldPasswordController.clear();
-      newPasswordController.clear();
-      confirmNewPasswordController.clear();
     }
   }
+
+  // Future<void> changePassword() async {
+  //   String oldPassword = oldPasswordController.text.trim();
+  //   String newPassword = newPasswordController.text.trim();
+  //   String confirmNewPassword = confirmNewPasswordController.text.trim();
+
+  //   // Add your validation logic here
+  //   if (oldPassword.isEmpty || newPassword.isEmpty || confirmNewPassword.isEmpty) {
+  //     // Show error message if any field is empty
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Please fill in all fields'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //   } else if (newPassword != confirmNewPassword) {
+  //     // Show error message if new passwords do not match
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('New passwords do not match'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //   } else {
+  //     // Perform password change logic here (e.g., call API or update database)
+  //     // After successful password change, show success message
+
+  //     logger.d('LogginCredentials is $loggedInCred');
+  //     bool x = HiveAdapter.changePassword(loggedInCred?['email'] ?? '', oldPassword, newPassword);
+
+  //     if(!x){
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Old password do not match'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     } else{
+
+  //       await logout(context);
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Password changed successfully'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     }
+
+      
+  //     // Clear text fields after successful password change
+  //     oldPasswordController.clear();
+  //     newPasswordController.clear();
+  //     confirmNewPasswordController.clear();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
