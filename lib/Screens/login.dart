@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:managment/data/model/register_id.dart'; // Assuming this is for user registration
-//import 'package:provider/provider.dart';
-
+import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
+import 'package:managment/data/model/credentials.dart';
+import 'package:managment/data/savecred.dart';
+import 'package:provider/provider.dart';
 import 'package:managment/widgets/bottomnavigationbar.dart';
+
+final Logger logger = Logger();
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -17,19 +22,25 @@ class _MyLoginState extends State<MyLogin> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  final credBox = Hive.box<Credential>('credBox');
+
   @override
   void initState() {
     super.initState();
-    getData();
+    getdata2();
   }
 
-  void getData() async {
-    // You can add any initial data fetching logic here if needed
-    isChecked = true;
-    setState(() {
-
-
-    });
+  void getdata2(){
+    
+    final x = credBox.get(0);
+    String? savedEmail = x?.email;
+    String? savedPassword = x?.password;
+    if (savedEmail != null && savedPassword != null) {
+      email.text = savedEmail;
+      password.text = savedPassword;
+      isChecked = true;
+      setState(() {});
+    }
   }
 
   @override
@@ -106,8 +117,16 @@ class _MyLoginState extends State<MyLogin> {
                               Checkbox(
                                 value: isChecked,
                                 onChanged: (value) {
-                                  setState(() {
+                                  setState((){
                                     isChecked = value ?? false;
+
+                                    if(isChecked){
+                                      credBox.add(Credential(email.text.trim(), password.text));
+                                      logger.d('email and password in credbox if statement. ${credBox.values.toList()}');
+                                    } else{
+                                      credBox.clear();
+                                      logger.d('email and password in credbox else statement. ${credBox.values.toList()}');
+                                    }
                                   });
                                 },
                               ),
@@ -196,6 +215,8 @@ class _MyLoginState extends State<MyLogin> {
 
       if (userCredential.user != null) {
         // Login successful, navigate to home screen
+        
+        getData();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (BuildContext context) {
@@ -243,4 +264,35 @@ class _MyLoginState extends State<MyLogin> {
       );
     }
   }
+
+  Future<void> getData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        // Get the user's document from Firestore based on their UID
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid) // Assuming 'users' is the collection name
+            .get();
+
+        if (documentSnapshot.exists) {
+          // The document exists, retrieve the data
+          Map<String, dynamic> userData = documentSnapshot.data() as Map<String, dynamic>;
+          String userName = userData['name']; // Access the 'name' field
+
+          final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+          userCredProvider.setCred({'name': userName, 'email': email.text.trim()});
+          // Print or use the retrieved data as needed
+          print('User Name: $userName');
+        } else {
+          print('User document does not exist');
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
+      }
+    } else {
+      print('User is not signed in');
+    }
+  }
+
 }

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:managment/data/model/register_id.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +19,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   void initState() {
-    super.initState();
-    HiveAdapter.initialize(); // Initialize HiveAdapter
+    super.initState(); // Initialize HiveAdapter
     final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
     loggedInCred = userCredProvider.cred;
   }
@@ -61,7 +59,8 @@ class _ChangePasswordState extends State<ChangePassword> {
 
           // Logout after password change
           await FirebaseAuth.instance.signOut();
-
+          final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+          userCredProvider.setCred(null);
           Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
 
           ScaffoldMessenger.of(context).showSnackBar(

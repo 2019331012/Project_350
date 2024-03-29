@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:managment/data/model/register_id.dart';
+import 'package:logger/logger.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
+
+final Logger logger = Logger();
+
 
 class ChangeName extends StatefulWidget {
   const ChangeName({Key? key}) : super(key: key);
@@ -17,14 +22,13 @@ class _ChangeNameState extends State<ChangeName> {
 
   @override
   void initState() {
-    super.initState();
-    HiveAdapter.initialize(); // Initialize HiveAdapter
+    super.initState(); // Initialize HiveAdapter
     final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
     loggedInCred = userCredProvider.cred;
   }
 
   // Function to handle changing the name
-  void changeName() {
+  Future<void> changeName() async {
     String oldName = loggedInCred?['name'] ?? '';
     String newName = newNameController.text;
 
@@ -50,14 +54,37 @@ class _ChangeNameState extends State<ChangeName> {
       // After successful name change, show success message
 
       logger.d('LoggingCredentials: $loggedInCred');
-      HiveAdapter.changeName(context, loggedInCred?['email'] ?? '', oldName, newName);
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        try {
+          // Update the user's name in Firestore based on their UID
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid) // Assuming 'users' is the collection name
+              .update({'name': newName});
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Name has been changed successfully'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Name has been changed successfully'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+
+          loggedInCred?['name'] = newName;
+          final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+          userCredProvider.setCred(loggedInCred);
+        } catch (e) {
+          // Handle errors (e.g., network issues, Firestore write errors, etc.)
+          print('Error updating name: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to update name. Please try again later.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
 
       // Clear the new name text field after successful name change
       newNameController.clear();

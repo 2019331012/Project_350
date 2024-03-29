@@ -16,8 +16,6 @@ class _MyRegisterState extends State<MyRegister> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  late Box<String> credentialsBox;
-
   @override
   void initState() {
     super.initState();
@@ -26,7 +24,6 @@ class _MyRegisterState extends State<MyRegister> {
 
   Future<void> initializeHive() async {
     await Hive.initFlutter();
-    credentialsBox = await Hive.openBox<String>('credentialsBox');
   }
 
   @override
