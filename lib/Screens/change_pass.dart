@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:managment/data/logout.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
 
@@ -58,9 +59,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           await user.updatePassword(newPassword);
 
           // Logout after password change
-          await FirebaseAuth.instance.signOut();
-          final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
-          userCredProvider.setCred(null);
+          await Logout.logout(context);
           Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
 
           ScaffoldMessenger.of(context).showSnackBar(
