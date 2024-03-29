@@ -176,7 +176,7 @@ class _HomeState extends State<Home> {
                 children: [
                   Positioned(
                     top: 35,
-                    left: 340,
+                    left: 300,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(7),
                       child: Container(
@@ -225,11 +225,11 @@ class _HomeState extends State<Home> {
           left: 30,
           child: Container(
             height: 170,
-            width: 260,
+            width: 280,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Color.fromRGBO(47, 125, 121, 0.3),
+                  color: Colors.black,
                   offset: Offset(0, 6),
                   blurRadius: 12,
                   spreadRadius: 6,
