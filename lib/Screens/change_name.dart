@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
 
-final Logger logger = Logger();
+//final Logger logger = Logger();
 
 
 class ChangeName extends StatefulWidget {
@@ -53,7 +52,7 @@ class _ChangeNameState extends State<ChangeName> {
       // Perform name change logic here (e.g., call API or update database)
       // After successful name change, show success message
 
-      logger.d('LoggingCredentials: $loggedInCred');
+      //logger.d('LoggingCredentials: $loggedInCred');
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         try {

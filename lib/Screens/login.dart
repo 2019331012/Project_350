@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
-import 'package:logger/logger.dart';
+import 'package:managment/data/model/add_date.dart';
 import 'package:managment/data/model/credentials.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
 import 'package:managment/widgets/bottomnavigationbar.dart';
 
-final Logger logger = Logger();
+//final Logger logger = Logger();
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -23,6 +23,7 @@ class _MyLoginState extends State<MyLogin> {
   TextEditingController password = TextEditingController();
 
   final credBox = Hive.box<Credential>('credBox');
+  final box = Hive.box<Add_data>('data');
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _MyLoginState extends State<MyLogin> {
 
   void getdata2(){
     
+    //logger.d('Just making sure getdata2 is being called properly');
     final x = credBox.get(0);
     String? savedEmail = x?.email;
     String? savedPassword = x?.password;
@@ -121,11 +123,11 @@ class _MyLoginState extends State<MyLogin> {
                                     isChecked = value ?? false;
 
                                     if(isChecked){
-                                      credBox.add(Credential(email.text.trim(), password.text));
-                                      logger.d('email and password in credbox if statement. ${credBox.values.toList()}');
+                                      credBox.put(0, Credential(email.text.trim(), password.text));
+                                      //logger.d('email and password in credbox if statement. ${credBox.keys.toList()} and ${credBox.values.toList()}');
                                     } else{
-                                      credBox.clear();
-                                      logger.d('email and password in credbox else statement. ${credBox.values.toList()}');
+                                      credBox.delete(0);
+                                      //logger.d('email and password in credbox else statement. ${credBox.keys.toList()} and ${credBox.values.toList()}');
                                     }
                                   });
                                 },
@@ -278,12 +280,29 @@ class _MyLoginState extends State<MyLogin> {
         if (documentSnapshot.exists) {
           // The document exists, retrieve the data
           Map<String, dynamic> userData = documentSnapshot.data() as Map<String, dynamic>;
+          
           String userName = userData['name']; // Access the 'name' field
 
           final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
-          userCredProvider.setCred({'name': userName, 'email': email.text.trim()});
+          userCredProvider.setCred({'name': userName, 'email': user.email ?? ''/*email.text.trim()*/});
+
+
+          CollectionReference dataCollectionRef = FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .collection('data');
+
+          QuerySnapshot dataCollectionSnapshot = await dataCollectionRef.get();
+
+          dataCollectionSnapshot.docs.forEach((dataDoc) {
+            box.add(Add_data.fromMap(dataDoc.data() as Map<String, dynamic>));
+          });
           // Print or use the retrieved data as needed
           print('User Name: $userName');
+          dataCollectionSnapshot.docs.forEach((dataDoc) =>
+              print('Data Collection Snapshot is ${dataDoc.data()}')
+          );
+
         } else {
           print('User document does not exist');
         }

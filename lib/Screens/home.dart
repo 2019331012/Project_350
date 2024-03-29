@@ -40,8 +40,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
-    loggedInCred = userCredProvider.cred;
+    // final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+    // loggedInCred = userCredProvider.cred;
   }
 
   @override
@@ -118,248 +118,269 @@ class _HomeState extends State<Home> {
   }
 
   ListTile get(int index, Add_data history) {
-  String imagePath = 'images/${history.name}.png';
-  
-  // Check if the image exists, if not, use the default image
-  _imageExists(imagePath).then((exists) {
-    if (!exists) {
-      imagePath = 'images\custom.png';
-    }
-  });
+    String imagePath = 'images/${history.name}.png';
+    
+    // Check if the image exists, if not, use the default image
+    _imageExists(imagePath).then((exists) {
+      if (!exists) {
+        imagePath = 'images\custom.png';
+      }
+    });
 
-  return ListTile(
-    leading: ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: Image.asset(imagePath, height: 40),
-    ),
-    title: Text(
-      history.name,
-      style: TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.w600,
+    return ListTile(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Image.asset(imagePath, height: 40),
       ),
-    ),
-    subtitle: Text(
-      '${day[history.datetime.weekday - 1]}  ${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
-      style: TextStyle(
-        fontWeight: FontWeight.w600,
+      title: Text(
+        history.name,
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
       ),
-    ),
-    trailing: Text(
-      history.amount,
-      style: TextStyle(
-        fontWeight: FontWeight.w600,
-        fontSize: 19,
-        color: history.IN == 'Income' ? Colors.green : Colors.red,
+      subtitle: Text(
+        '${day[history.datetime.weekday - 1]}  ${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
       ),
-    ),
-  );
-}
+      trailing: Text(
+        history.amount,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 19,
+          color: history.IN == 'Income' ? Colors.green : Colors.red,
+        ),
+      ),
+    );
+  }
 
 
   Widget _head() {
-    return Stack(
-      children: [
-        Column(
+    
+    return FutureBuilder<Map<String, String>?>(
+      future: _getLoggedInCred(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading indicator while waiting
+        }
+
+        // Check if loggedInCred is not null, otherwise use a default name
+        String name = snapshot.data?['name'] ?? 'Guest';
+
+        
+        
+        return Stack(
           children: [
-            Container(
-              width: double.infinity,
-              height: 240,
-              decoration: BoxDecoration(
-                color: Color(0xFF603300),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 35,
-                    left: 300,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(7),
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        color: Color.fromRGBO(250, 250, 250, 0.1),
-                        child: Icon(
-                          Icons.notification_add_outlined,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
+            Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 240,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF603300),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 35, left: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Good Day',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 224, 223, 223),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 35,
+                        left: 300,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(7),
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            color: Color.fromRGBO(250, 250, 250, 0.1),
+                            child: Icon(
+                              Icons.notification_add_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        Text(
-                          loggedInCred?['name'] ?? 'Guest',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 35, left: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Good Day',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 224, 223, 223),
+                              ),
+                            ),
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              top: 140,
+              left: 30,
+              child: Container(
+                height: 170,
+                width: 280,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 6),
+                      blurRadius: 12,
+                      spreadRadius: 6,
+                    ),
+                  ],
+                  color: Color(0xFF361500),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total Balance',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Icon(
+                            Icons.more_horiz,
                             color: Colors.white,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                    SizedBox(height: 7),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Row(
+                        children: [
+                          Text(
+                            '\$ ${total()}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 25),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 13,
+                                backgroundColor: Color(0xFF603300),
+                                child: Icon(
+                                  Icons.arrow_downward,
+                                  color: Colors.white,
+                                  size: 19,
+                                ),
+                              ),
+                              SizedBox(width: 7),
+                              Text(
+                                'Income',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 216, 216, 216),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 13,
+                                backgroundColor:  Color(0xFF603300),
+                                child: Icon(
+                                  Icons.arrow_upward,
+                                  color: Colors.white,
+                                  size: 19,
+                                ),
+                              ),
+                              SizedBox(width: 7),
+                              Text(
+                                'Expenses',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 216, 216, 216),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '\$ ${income()}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '\$ ${expenses()}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
+            )
           ],
-        ),
-        Positioned(
-          top: 140,
-          left: 30,
-          child: Container(
-            height: 170,
-            width: 280,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  offset: Offset(0, 6),
-                  blurRadius: 12,
-                  spreadRadius: 6,
-                ),
-              ],
-              color: Color(0xFF361500),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Balance',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Icon(
-                        Icons.more_horiz,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 7),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Row(
-                    children: [
-                      Text(
-                        '\$ ${total()}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 25),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 13,
-                            backgroundColor: Color(0xFF603300),
-                            child: Icon(
-                              Icons.arrow_downward,
-                              color: Colors.white,
-                              size: 19,
-                            ),
-                          ),
-                          SizedBox(width: 7),
-                          Text(
-                            'Income',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 216, 216, 216),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 13,
-                            backgroundColor:  Color(0xFF603300),
-                            child: Icon(
-                              Icons.arrow_upward,
-                              color: Colors.white,
-                              size: 19,
-                            ),
-                          ),
-                          SizedBox(width: 7),
-                          Text(
-                            'Expenses',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 216, 216, 216),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 6),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '\$ ${income()}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        '\$ ${expenses()}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-      ],
+        );
+      }
     );
+  }
+
+
+  Future<Map<String, String>?> _getLoggedInCred() async {
+    final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
+    return userCredProvider.cred;
   }
 }

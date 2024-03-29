@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:managment/data/model/add_date.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -38,6 +40,7 @@ class _Add_ScreenState extends State<Add_Screen> {
     amount_.addListener(() {
       setState(() {});
     });
+    selctedItemi = _itemei[0];
   }
 
   Widget build(BuildContext context) {
@@ -61,80 +64,94 @@ class _Add_ScreenState extends State<Add_Screen> {
 }
 
 
-  // Container main_container() {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(20),
-  //       color: Colors.white,
-  //     ),
-  //     height: 600,
-  //     width: 340,
-  //     child: Column(
-  //       children: [
-  //         SizedBox(height: 50),
-  //         How(),
-  //         SizedBox(height: 30),
-  //         name(),
-  //         SizedBox(height: 30),
-  //         amount(),
-  //         SizedBox(height: 30),
-  //         explain(),
-  //         SizedBox(height: 30),
-  //         date_time(),
-  //         Spacer(),
-  //         save(),
-  //         SizedBox(height: 25),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Container main_container() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      height: 200, // Reduced height for the row layout
+      height: 600,
       width: 340,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align columns evenly
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
         children: [
-          Expanded(
-            flex: 3, // Flex for Amount widget
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                amount(),
-                SizedBox(height: 10), // Adjust spacing as needed
-                date_time(),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 4, // Flex for Explain widget
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                explain(),
-                SizedBox(height: 10), // Adjust spacing as needed
-                save(),
-              ],
-            ),
-          ),
+          SizedBox(height: 50),
+          How(),
+          SizedBox(height: 30),
+          name(),
+          SizedBox(height: 30),
+          amount(),
+          SizedBox(height: 30),
+          explain(),
+          SizedBox(height: 30),
+          date_time(),
+          Spacer(),
+          save(),
+          SizedBox(height: 25),
         ],
       ),
     );
   }
 
+  // Container main_container() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(20),
+  //       color: Colors.white,
+  //     ),
+  //     height: 200, // Reduced height for the row layout
+  //     width: 340,
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align columns evenly
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         Expanded(
+  //           flex: 3, // Flex for Amount widget
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               amount(),
+  //               SizedBox(height: 10), // Adjust spacing as needed
+  //               date_time(),
+  //             ],
+  //           ),
+  //         ),
+  //         Expanded(
+  //           flex: 4, // Flex for Explain widget
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               explain(),
+  //               SizedBox(height: 10), // Adjust spacing as needed
+  //               save(),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
 
   GestureDetector save() {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         var add = Add_data(
             selctedItemi!, amount_c.text, date, expalin_C.text, selctedItem!);
         box.add(add);
+        User? user = FirebaseAuth.instance.currentUser;
+
+        if(user != null){
+          try{
+            await FirebaseFirestore.instance.collection('users')
+            .doc(user.uid)
+            .collection('data')
+            .add(add.toMap());
+        
+          }catch (e) {
+            print('Error fetching user data: $e');
+          }
+        }
+    
         Navigator.of(context).pop();
       },
       child: Container(
