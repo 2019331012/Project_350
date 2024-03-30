@@ -293,7 +293,7 @@ class _Add_ScreenState extends State<Add_Screen> {
               borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(width: 2, color: Color(0xff368983))),
+              borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
         ),
       ),
     );
@@ -395,7 +395,7 @@ class _Add_ScreenState extends State<Add_Screen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(width: 2, color: Color(0xff368983)),
+                  borderSide: BorderSide(width: 2, color: Color(0xFF603300)),
                 ),
               ),
             ),
