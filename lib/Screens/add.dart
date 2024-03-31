@@ -92,6 +92,7 @@ class _Add_ScreenState extends State<Add_Screen> {
 
   Widget entryWidget(int entryIndex) {
      double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
+     entries[entryIndex].total=totalAmount;
     return Column(
       children: [
         Text('Entry ${entryIndex + 1}'),
