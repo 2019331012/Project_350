@@ -125,12 +125,20 @@ class _Add_ScreenState extends State<Add_Screen> {
         ),
         TextField(
           keyboardType: TextInputType.number,
-          onChanged: (value) => entries[entryIndex].unitPrice = double.tryParse(value) ?? 0,
+          onChanged: (value) {
+          setState(() {
+            entries[entryIndex].unitPrice = double.tryParse(value) ?? 0;
+          });
+        },
           decoration: InputDecoration(labelText: 'Unit Price'),
         ),
         TextField(
           keyboardType: TextInputType.number,
-          onChanged: (value) => entries[entryIndex].quantity = double.tryParse(value) ?? 0,
+          onChanged: (value) {
+          setState(() {
+            entries[entryIndex].quantity = double.tryParse(value) ?? 0;
+          });
+        },
           decoration: InputDecoration(labelText: 'Quantity'),
         ),
         SizedBox(height: 20),
