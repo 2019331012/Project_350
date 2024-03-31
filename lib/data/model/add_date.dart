@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
+import 'package:managment/data/model/entry.dart';
 
 part 'add_date.g.dart';
 
@@ -10,7 +11,7 @@ class Add_data extends HiveObject {
   @HiveField(1)
   String explain;
   @HiveField(2)
-  List<Entry> entries; // List to store multiple entries
+  Entry entries; // List to store multiple entries
   @HiveField(3)
   String IN;
   @HiveField(4)
@@ -20,59 +21,32 @@ class Add_data extends HiveObject {
 
   factory Add_data.fromMap(Map<String, dynamic> map) {
     // Convert List<dynamic> to List<Entry>
-    List<Entry> entries = (map['entries'] as List<dynamic>)
-        .map((entry) => Entry.fromMap(entry))
-        .toList();
+    // List<Entry> entries = (map['entries'] as List<dynamic>)
+    //     .map((entry) => Entry.fromMap(entry))
+    //     .toList();
 
+    Entry entry = new Entry.fromMap(map['entries']);
+    
     return Add_data(
       map['IN'] as String,
-      entries,
+      entry,
       (map['datetime'] as Timestamp).toDate(),
       map['explain'] as String,
       map['name'] as String,
     );
   }
 
-  String get amount => IN;
-
   Map<String, dynamic> toMap() {
-    // Convert List<Entry> to List<Map<String, dynamic>>
-    List<Map<String, dynamic>> entryMaps =
-        entries.map((entry) => entry.toMap()).toList();
+    // // Convert List<Entry> to List<Map<String, dynamic>>
+    // List<Map<String, dynamic>> entryMaps =
+    //     entries.map((entry) => entry.toMap()).toList();
 
     return {
       'name': name,
       'explain': explain,
-      'entries': entryMaps, // Store entries as a list of maps
+      'entries': entries.toMap(), // Store entries as a list of maps
       'IN': IN,
       'datetime': Timestamp.fromDate(datetime), // Convert DateTime to Firestore Timestamp
-    };
-  }
-}
-
-class Entry {
-  String unitName;
-  double unitPrice;
-  int quantity;
-  double total;
-
-  Entry(this.unitName, this.unitPrice, this.quantity, this.total);
-
-  factory Entry.fromMap(Map<String, dynamic> map) {
-    return Entry(
-      map['unitName'] as String,
-      map['unitPrice'] as double,
-      map['quantity'] as int,
-      map['total'] as double,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'unitName': unitName,
-      'unitPrice': unitPrice,
-      'quantity': quantity,
-      'total': total,
     };
   }
 }

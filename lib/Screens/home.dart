@@ -146,7 +146,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       trailing: Text(
-        history.amount,
+        '${history.entries.total}',
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 19,

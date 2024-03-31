@@ -142,7 +142,7 @@ class _StatisticsState extends State<Statistics> {
                 ),
               ),
               trailing: Text(
-                a[index].amount,
+                '${a[index].entries.total}',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 19,

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:managment/data/model/add_date.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:managment/data/model/entry.dart';
 
 class Add_Screen extends StatefulWidget {
   const Add_Screen({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _Add_ScreenState extends State<Add_Screen> {
   final TextEditingController explainController = TextEditingController();
   final List<String> categories = ['Food', 'Transfer', 'Transportation', 'Education'];
   final List<String> types = ['Income', 'Expense'];
-  List<Entry> entries = [Entry('', 0.0, 0, 0.0)]; // Initial entry
+  List<Entry> entries = [Entry('', 0.0, 0.0, 0.0)]; // Initial entry
 
   @override
   void initState() {
@@ -129,7 +130,7 @@ class _Add_ScreenState extends State<Add_Screen> {
         ),
         TextField(
           keyboardType: TextInputType.number,
-          onChanged: (value) => entries[entryIndex].quantity = int.tryParse(value) ?? 0,
+          onChanged: (value) => entries[entryIndex].quantity = double.tryParse(value) ?? 0,
           decoration: InputDecoration(labelText: 'Quantity'),
         ),
         SizedBox(height: 20),
@@ -143,7 +144,7 @@ class _Add_ScreenState extends State<Add_Screen> {
     return TextButton(
       onPressed: () {
         setState(() {
-          entries.add(Entry('', 0.0, 0, 0.0));
+          entries.add(Entry('', 0.0, 0.0, 0.0));
         });
       },
       child: Text('Add Entry'),
@@ -178,17 +179,19 @@ class _Add_ScreenState extends State<Add_Screen> {
       GestureDetector(
         onTap: () async {
           // Your existing save logic
-          var add = Add_data(selectedItemi!, entries, date, explainController.text, selectedItem!);
-          box.add(add);
-          User? user = FirebaseAuth.instance.currentUser;
-          if(user != null){
-            try{
-              await FirebaseFirestore.instance.collection('users')
-              .doc(user.uid)
-              .collection('data')
-              .add(add.toMap());
-            }catch (e) {
-              print('Error fetching user data: $e');
+          for (var entryIndex = 0; entryIndex < entries.length; entryIndex++){
+            var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!);
+            box.add(add);
+            User? user = FirebaseAuth.instance.currentUser;
+            if(user != null){
+              try{
+                await FirebaseFirestore.instance.collection('users')
+                .doc(user.uid)
+                .collection('data')
+                .add(add.toMap());
+              }catch (e) {
+                print('Error uploading user data: $e');
+              }
             }
           }
           Navigator.of(context).pop();

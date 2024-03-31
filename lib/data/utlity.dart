@@ -1,37 +1,37 @@
 import 'package:hive/hive.dart';
 import 'package:managment/data/model/add_date.dart';
 
-int totals = 0;
+double totals = 0;
 
 final box = Hive.box<Add_data>('data');
 
-int total() {
+double total() {
   var history2 = box.values.toList();
-  List a = [0, 0];
+  List a = [0.0, 0.0];
   for (var i = 0; i < history2.length; i++) {
     a.add(history2[i].IN == 'Income'
-        ? int.parse(history2[i].amount)
-        : int.parse(history2[i].amount) * -1);
+        ? history2[i].entries.total
+        : history2[i].entries.total * -1);
   }
   totals = a.reduce((value, element) => value + element);
   return totals;
 }
 
-int income() {
+double income() {
   var history2 = box.values.toList();
-  List a = [0, 0];
+  List a = [0.0, 0.0];
   for (var i = 0; i < history2.length; i++) {
-    a.add(history2[i].IN == 'Income' ? int.parse(history2[i].amount) : 0);
+    a.add(history2[i].IN == 'Income' ? history2[i].entries.total : 0);
   }
   totals = a.reduce((value, element) => value + element);
   return totals;
 }
 
-int expenses() {
+double expenses() {
   var history2 = box.values.toList();
-  List a = [0, 0];
+  List a = [0.0, 0.0];
   for (var i = 0; i < history2.length; i++) {
-    a.add(history2[i].IN == 'Income' ? 0 : int.parse(history2[i].amount) * -1);
+    a.add(history2[i].IN == 'Income' ? 0 : history2[i].entries.total * -1);
   }
   totals = a.reduce((value, element) => value + element);
   return totals;
@@ -86,13 +86,13 @@ List<Add_data> year() {
   return a;
 }
 
-int total_chart(List<Add_data> history2) {
+double total_chart(List<Add_data> history2) {
   List a = [0, 0];
 
   for (var i = 0; i < history2.length; i++) {
     a.add(history2[i].IN == 'Income'
-        ? int.parse(history2[i].amount)
-        : int.parse(history2[i].amount) * -1);
+        ? history2[i].entries.total
+        : history2[i].entries.total * -1);
   }
   totals = a.reduce((value, element) => value + element);
   return totals;

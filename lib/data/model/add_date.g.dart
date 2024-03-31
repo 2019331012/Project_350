@@ -18,7 +18,7 @@ class AdddataAdapter extends TypeAdapter<Add_data> {
     };
     return Add_data(
       fields[3] as String,
-      (fields[2] as List).cast<Entry>(),
+      fields[2] as Entry,
       fields[4] as DateTime,
       fields[1] as String,
       fields[0] as String,
