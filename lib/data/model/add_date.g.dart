@@ -18,7 +18,7 @@ class AdddataAdapter extends TypeAdapter<Add_data> {
     };
     return Add_data(
       fields[3] as String,
-      fields[2] as String,
+      (fields[2] as List).cast<Entry>(),
       fields[4] as DateTime,
       fields[1] as String,
       fields[0] as String,
@@ -34,7 +34,7 @@ class AdddataAdapter extends TypeAdapter<Add_data> {
       ..writeByte(1)
       ..write(obj.explain)
       ..writeByte(2)
-      ..write(obj.amount)
+      ..write(obj.entries)
       ..writeByte(3)
       ..write(obj.IN)
       ..writeByte(4)
