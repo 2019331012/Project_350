@@ -85,7 +85,8 @@ class _ChangeNameState extends State<ChangeName> {
           'Change Name',
           style: TextStyle(color: Colors.white), // Setting title color to white
         ),
-        backgroundColor: Color(0xFF603300), // Customizing app bar color
+        backgroundColor: Color(0xFF603300),
+        iconTheme: IconThemeData(color: Colors.white), // Customizing app bar color
       ),
       body: Padding(
         padding: EdgeInsets.all(16),

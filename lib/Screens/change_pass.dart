@@ -92,7 +92,8 @@ class _ChangePasswordState extends State<ChangePassword> {
             color: Colors.white, // Set the text color to white
           ),
         ),
-        backgroundColor: Color(0xFF603300), // Customizing app bar color
+        backgroundColor: Color(0xFF603300),
+        iconTheme: IconThemeData(color: Colors.white), // Customizing app bar color
       ),
       body: Padding(
         padding: EdgeInsets.all(16),

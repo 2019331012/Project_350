@@ -49,9 +49,9 @@ class _SearchState extends State<Search> {
                   labelText: 'Search',
                   labelStyle: TextStyle(color: Colors.black),
                   enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 3, color: Color(0xffC5C5C5))),
                   focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 3, color: Color(0xFF603300))),
                 ),
               ),
             ),
