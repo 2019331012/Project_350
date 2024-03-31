@@ -20,13 +20,10 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   void initState() {
-    super.initState(); // Initialize HiveAdapter
+    super.initState();
     final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
     loggedInCred = userCredProvider.cred;
   }
-
-
-  // Function to handle changing the password
 
   Future<void> changePassword() async {
     String oldPassword = oldPasswordController.text.trim();
@@ -51,16 +48,11 @@ class _ChangePasswordState extends State<ChangePassword> {
       try {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          // Re-authenticate the user to ensure the old password is correct
           AuthCredential credential = EmailAuthProvider.credential(email: user.email!, password: oldPassword);
           await user.reauthenticateWithCredential(credential);
-
-          // Change the user's password
           await user.updatePassword(newPassword);
 
-          // Logout after password change
-          await Logout.logout(context);
-          Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+          await logout(context); // Call the logout function
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -69,7 +61,6 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
           );
 
-          // Clear text fields after successful password change
           oldPasswordController.clear();
           newPasswordController.clear();
           confirmNewPasswordController.clear();
@@ -87,98 +78,99 @@ class _ChangePasswordState extends State<ChangePassword> {
     }
   }
 
-  // Future<void> changePassword() async {
-  //   String oldPassword = oldPasswordController.text.trim();
-  //   String newPassword = newPasswordController.text.trim();
-  //   String confirmNewPassword = confirmNewPasswordController.text.trim();
-
-  //   // Add your validation logic here
-  //   if (oldPassword.isEmpty || newPassword.isEmpty || confirmNewPassword.isEmpty) {
-  //     // Show error message if any field is empty
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Please fill in all fields'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   } else if (newPassword != confirmNewPassword) {
-  //     // Show error message if new passwords do not match
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('New passwords do not match'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   } else {
-  //     // Perform password change logic here (e.g., call API or update database)
-  //     // After successful password change, show success message
-
-  //     logger.d('LogginCredentials is $loggedInCred');
-  //     bool x = HiveAdapter.changePassword(loggedInCred?['email'] ?? '', oldPassword, newPassword);
-
-  //     if(!x){
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text('Old password do not match'),
-  //           duration: Duration(seconds: 2),
-  //         ),
-  //       );
-  //     } else{
-
-  //       await logout(context);
-
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text('Password changed successfully'),
-  //           duration: Duration(seconds: 2),
-  //         ),
-  //       );
-  //     }
-
-      
-  //     // Clear text fields after successful password change
-  //     oldPasswordController.clear();
-  //     newPasswordController.clear();
-  //     confirmNewPasswordController.clear();
-  //   }
-  // }
+  Future<void> logout(BuildContext context) async {
+    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Password'),
+        title: Text(
+          'Change Password',
+          style: TextStyle(
+            color: Colors.white, // Set the text color to white
+          ),
+        ),
+        backgroundColor: Color(0xFF603300), // Customizing app bar color
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: oldPasswordController,
-              decoration: InputDecoration(labelText: 'Old Password'),
-              obscureText: true,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(width: 2, color: Color(0xFF603300)),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                controller: oldPasswordController,
+                decoration: InputDecoration(
+                  labelText: 'Old Password',
+                  labelStyle: TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                obscureText: true,
+                cursorColor: Color(0xFF603300),
+                style: TextStyle(color: Colors.black), // Text color for the input text
+              ),
             ),
             SizedBox(height: 16),
-            TextField(
-              controller: newPasswordController,
-              decoration: InputDecoration(labelText: 'New Password'),
-              obscureText: true,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(width: 2, color: Color(0xFF603300)),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                controller: newPasswordController,
+                decoration: InputDecoration(
+                  labelText: 'New Password',
+                  labelStyle: TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                obscureText: true,
+                cursorColor: Color(0xFF603300),
+                style: TextStyle(color: Colors.black), // Text color for the input text
+              ),
             ),
             SizedBox(height: 16),
-            TextField(
-              controller: confirmNewPasswordController,
-              decoration: InputDecoration(labelText: 'Confirm New Password'),
-              obscureText: true,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(width: 2, color: Color(0xFF603300)),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                controller: confirmNewPasswordController,
+                decoration: InputDecoration(
+                  labelText: 'Confirm New Password',
+                  labelStyle: TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                obscureText: true,
+                cursorColor: Color(0xFF603300),
+                style: TextStyle(color: Colors.black), // Text color for the input text
+              ),
             ),
             SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
                 changePassword();
               },
-              child: Text('Change Password'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF603300), // Button background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text('Change Password', style: TextStyle(color: Colors.white)),
             ),
-
           ],
         ),
       ),
@@ -191,9 +183,5 @@ class _ChangePasswordState extends State<ChangePassword> {
     newPasswordController.dispose();
     confirmNewPasswordController.dispose();
     super.dispose();
-  }
-  
-  Future<void> logout(BuildContext context) async {
-    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:managment/Screens/add.dart';
 import 'package:managment/Screens/home.dart';
+import 'package:managment/Screens/search.dart';
 import 'package:managment/Screens/statistics.dart';
 import 'package:managment/Screens/profile.dart';
 
@@ -24,7 +25,7 @@ class _BottomState extends State<Bottom> {
     screens = [
       Home(),
       Statistics(),
-      Home(),
+      Search(),
       Profile(),
     ];
   }
@@ -81,7 +82,7 @@ class _BottomState extends State<Bottom> {
                   });
                 },
                 child: Icon(
-                  Icons.account_balance_wallet_outlined,
+                  Icons.search_outlined,
                   size: 30,
                   color: indexColor == 2 ? Color(0xFF603300) : Colors.grey,
                 ),

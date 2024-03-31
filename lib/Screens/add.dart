@@ -18,7 +18,6 @@ class _Add_ScreenState extends State<Add_Screen> {
   String? selectedItem;
   String? selectedItemi;
   final TextEditingController explainController = TextEditingController();
-  final List<String> categories = ['Food', 'Transfer', 'Transportation', 'Education'];
   final List<String> types = ['Income', 'Expense'];
   List<Entry> entries = [Entry('', 0.0, 0.0, 0.0)]; // Initial entry
 
@@ -27,11 +26,11 @@ class _Add_ScreenState extends State<Add_Screen> {
     super.initState();
     selectedItemi = types[0];
   }
-  double calculateContainerHeight() {
-   
-    double entryWidgetHeight = 300.0; 
 
-    double totalHeight = (entries.length * entryWidgetHeight) + 250.0; 
+  double calculateContainerHeight() {
+    double entryWidgetHeight = 300.0;
+
+    double totalHeight = (entries.length * entryWidgetHeight) + 250.0;
     return totalHeight;
   }
 
@@ -54,7 +53,7 @@ class _Add_ScreenState extends State<Add_Screen> {
             backgroundContainer(context),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(top: 100), 
+                padding: const EdgeInsets.only(top: 100),
                 child: mainContainer(),
               ),
             ),
@@ -70,8 +69,8 @@ class _Add_ScreenState extends State<Add_Screen> {
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      height: calculateContainerHeight()+300, 
-      width: 340,
+      height: calculateContainerHeight() + 300,
+      width: 500,
       child: Column(
         children: [
           SizedBox(height: 50),
@@ -91,60 +90,110 @@ class _Add_ScreenState extends State<Add_Screen> {
   }
 
   Widget entryWidget(int entryIndex) {
-     double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
-     entries[entryIndex].total=totalAmount;
+    double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
+    entries[entryIndex].total = totalAmount;
+
     return Column(
       children: [
         Text('Entry ${entryIndex + 1}'),
         SizedBox(height: 10),
-        DropdownButton<String>(
-          value: selectedItem,
-          onChanged: (value) {
-            setState(() {
-              selectedItem = value;
-              entries[entryIndex].unitName = value!;
-            });
-          },
-          // Dropdown items for categories
-          // Add logic to handle custom category if needed
-          //category code is not working you can add it later
-          items: categories.map((category) {
-            return DropdownMenuItem<String>(
-              value: category,
-              child: Text(category),
-            );
-          }).toList(),
-          hint: Text('Select Category'),
-        ),
-        TextField(
-          keyboardType: TextInputType.text,
-          onChanged: (value) {
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            keyboardType: TextInputType.text,
+            onChanged: (value) {
               double parsedValue = double.tryParse(value) ?? 0;
-              entries[entryIndex].unitName = parsedValue.toString();
-              },
-          decoration: InputDecoration(labelText: 'Unit Name'),
+              entries[entryIndex].unitName = value;
+            },
+            decoration: InputDecoration(
+              labelText: 'Unit Name',
+              labelStyle: TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+              // Text color for the label
+            ),
+            cursorColor: Color(0xFF603300),
+            style: TextStyle(color: Colors.black), // Text color for the input text
+          ),
         ),
-        TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-          setState(() {
-            entries[entryIndex].unitPrice = double.tryParse(value) ?? 0;
-          });
-        },
-          decoration: InputDecoration(labelText: 'Unit Price'),
+        SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                entries[entryIndex].unitPrice = double.tryParse(value) ?? 0;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Unit Price',
+              labelStyle: TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+              // Text color for the label
+            ),
+            cursorColor: Color(0xFF603300),
+            style: TextStyle(color: Colors.black), // Text color for the input text
+          ),
         ),
-        TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-          setState(() {
-            entries[entryIndex].quantity = double.tryParse(value) ?? 0;
-          });
-        },
-          decoration: InputDecoration(labelText: 'Quantity'),
+        SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                entries[entryIndex].quantity = double.tryParse(value) ?? 0;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Quantity',
+              labelStyle: TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+              // Text color for the label
+            ),
+            cursorColor: Color(0xFF603300),
+            style: TextStyle(color: Colors.black), // Text color for the input text
+          ),
         ),
         SizedBox(height: 20),
-      Text('Unit Amount: ${totalAmount.toStringAsFixed(2)}'), // Assuming you want to display totalAmount with 2 decimal places
-      SizedBox(height: 20),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Color(0xFF603300),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            'Unit Amount: ${totalAmount.toStringAsFixed(2)}', // Assuming you want to display totalAmount with 2 decimal places
+            style: TextStyle(
+              fontFamily: 'f',
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
       ],
     );
   }
@@ -161,60 +210,20 @@ class _Add_ScreenState extends State<Add_Screen> {
   }
 
   Widget save() {
-  double totalAmount = calculateTotalAmount(); // Calculate total amount
+    double totalAmount = calculateTotalAmount(); // Calculate total amount
 
-  return Column(
-    children: [
-      // Display total amount
-      Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.grey.shade300,
-        ),
-        width: 120,
-        height: 50,
-        child: Text(
-          'Total Amount: \$${totalAmount.toStringAsFixed(2)}',
-          style: TextStyle(
-            fontFamily: 'f',
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-            fontSize: 17,
-          ),
-        ),
-      ),
-      SizedBox(height: 10), // Add spacing
-      GestureDetector(
-        onTap: () async {
-          // Your existing save logic
-          for (var entryIndex = 0; entryIndex < entries.length; entryIndex++){
-            var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!);
-            box.add(add);
-            User? user = FirebaseAuth.instance.currentUser;
-            if(user != null){
-              try{
-                await FirebaseFirestore.instance.collection('users')
-                .doc(user.uid)
-                .collection('data')
-                .add(add.toMap());
-              }catch (e) {
-                print('Error uploading user data: $e');
-              }
-            }
-          }
-          Navigator.of(context).pop();
-        },
-        child: Container(
-          alignment: Alignment.center,
+    return Column(
+      children: [
+        // Display total amount
+
+        Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: Color(0xFF603300),
           ),
-          width: 120,
-          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
-            'Save',
+            'Total Amount: \$${totalAmount.toStringAsFixed(2)}', // Assuming you want to display totalAmount with 2 decimal places
             style: TextStyle(
               fontFamily: 'f',
               fontWeight: FontWeight.w600,
@@ -223,12 +232,46 @@ class _Add_ScreenState extends State<Add_Screen> {
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
-
+        SizedBox(height: 10), // Add spacing
+        GestureDetector(
+          onTap: () async {
+            // Your existing save logic
+            for (var entryIndex = 0; entryIndex < entries.length; entryIndex++) {
+              var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!);
+              box.add(add);
+              User? user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                try {
+                  await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('data').add(add.toMap());
+                } catch (e) {
+                  print('Error uploading user data: $e');
+                }
+              }
+            }
+            Navigator.of(context).pop();
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Color(0xFF603300),
+            ),
+            width: 120,
+            height: 50,
+            child: Text(
+              'Save',
+              style: TextStyle(
+                fontFamily: 'f',
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 17,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget dateTime() {
     return Container(
@@ -266,49 +309,62 @@ class _Add_ScreenState extends State<Add_Screen> {
   Widget how() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        width: 300,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            width: 0,
-            color: Color.fromARGB(255, 255, 255, 255),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    selectedItemi = types[0];
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: selectedItemi == types[0] ? Colors.green : Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(types[0]),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    selectedItemi = types[1];
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: selectedItemi == types[1] ? Colors.red : Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(types[1]),
+              ),
+            ],
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  selectedItemi = types[0];
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: selectedItemi == types[0] ? Colors.green : Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(types[0]),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  selectedItemi = types[1];
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: selectedItemi == types[1] ? Colors.red : Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(types[1]),
-            ),
-          ],
-        ),
+          SizedBox(height: 20),
+          DropdownButton<String>(
+            value: selectedItem,
+            onChanged: (value) {
+              setState(() {
+                selectedItem = value;
+              });
+            },
+            // Dropdown items for categories
+            // Add logic to handle custom category if needed
+            // category code is not working you can add it later
+            items: ['Food', 'Transfer', 'Transportation', 'Education'].map((category) {
+              return DropdownMenuItem<String>(
+                value: category,
+                child: Text(category),
+              );
+            }).toList(),
+            hint: Text('Select Category'),
+          ),
+          SizedBox(height: 20),
+        ],
       ),
     );
   }
