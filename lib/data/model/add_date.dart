@@ -16,8 +16,16 @@ class Add_data extends HiveObject {
   String IN;
   @HiveField(4)
   DateTime datetime;
+  @HiveField(5)
+  String documentId;
 
-  Add_data(this.IN, this.entries, this.datetime, this.explain, this.name);
+  Add_data(this.IN, this.entries, this.datetime, this.explain, this.name, this.documentId);
+
+  void setDocumentId(String id) {
+    documentId = id;
+  }
+
+
 
   factory Add_data.fromMap(Map<String, dynamic> map) {
     // Convert List<dynamic> to List<Entry>
@@ -33,6 +41,7 @@ class Add_data extends HiveObject {
       (map['datetime'] as Timestamp).toDate(),
       map['explain'] as String,
       map['name'] as String,
+      map['id'] as String,
     );
   }
 

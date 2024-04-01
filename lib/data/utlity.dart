@@ -17,6 +17,23 @@ double total() {
   return totals;
 }
 
+double calculateTotalAmount(List<Add_data> histories) {
+  // double totalAmount = 0.0;
+  // for (var history in histories) {
+  //   totalAmount += history.entries.total;
+  // }
+  // return totalAmount;
+
+  List a = [0.0, 0.0];
+  for (var i = 0; i < histories.length; i++) {
+    a.add(histories[i].IN == 'Income'
+        ? histories[i].entries.total
+        : histories[i].entries.total * -1);
+  }
+  totals = a.reduce((value, element) => value + element);
+  return totals;
+}
+
 double income() {
   var history2 = box.values.toList();
   List a = [0.0, 0.0];

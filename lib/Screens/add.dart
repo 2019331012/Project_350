@@ -237,12 +237,13 @@ class _Add_ScreenState extends State<Add_Screen> {
           onTap: () async {
             // Your existing save logic
             for (var entryIndex = 0; entryIndex < entries.length; entryIndex++) {
-              var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!);
-              box.add(add);
+              var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!, '');
               User? user = FirebaseAuth.instance.currentUser;
               if (user != null) {
                 try {
-                  await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('data').add(add.toMap());
+                  DocumentReference docRef = await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('data').add(add.toMap());
+                  add.setDocumentId(docRef.id);
+                  box.add(add);
                 } catch (e) {
                   print('Error uploading user data: $e');
                 }
