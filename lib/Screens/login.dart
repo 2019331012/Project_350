@@ -123,7 +123,7 @@ class _MyLoginState extends State<MyLogin> {
                                     isChecked = value ?? false;
 
                                     if(isChecked){
-                                      credBox.put(0, Credential(email.text.trim(), password.text));
+                                      credBox.put(0, Credential('Guest', email.text.trim(), password.text));
                                       //logger.d('email and password in credbox if statement. ${credBox.keys.toList()} and ${credBox.values.toList()}');
                                     } else{
                                       credBox.delete(0);
@@ -286,6 +286,7 @@ class _MyLoginState extends State<MyLogin> {
           final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);
           userCredProvider.setCred({'name': userName, 'email': user.email ?? ''/*email.text.trim()*/});
 
+          credBox.put(1, Credential(userName, email.text.trim(), password.text));
 
           CollectionReference dataCollectionRef = FirebaseFirestore.instance
               .collection('users')

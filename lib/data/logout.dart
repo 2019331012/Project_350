@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:managment/data/model/add_date.dart';
+import 'package:managment/data/model/credentials.dart';
 //import 'package:managment/data/model/credentials.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,9 @@ class Logout {
     // Navigate to the login screen and clear the route stack
     await FirebaseAuth.instance.signOut();
     final box = Hive.box<Add_data>('data');
-    box.clear();
+    box.clear();  
+    final credBox = Hive.box<Credential>('credBox');
+    credBox.delete(1);
     // final credBox = Hive.box<Credential>('credBox');
     // credBox.clear();
     final userCredProvider = Provider.of<UserCredProvider>(context, listen: false);

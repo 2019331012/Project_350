@@ -52,7 +52,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           await user.reauthenticateWithCredential(credential);
           await user.updatePassword(newPassword);
 
-          await logout(context); // Call the logout function
+          await Logout.logout(context); // Call the logout function
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -78,9 +78,9 @@ class _ChangePasswordState extends State<ChangePassword> {
     }
   }
 
-  Future<void> logout(BuildContext context) async {
-    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
-  }
+  // Future<void> logout(BuildContext context) async {
+  //   Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+  // }
 
   @override
   Widget build(BuildContext context) {

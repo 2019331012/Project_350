@@ -5,10 +5,17 @@ class UserCredProvider extends ChangeNotifier {
 
   Map<String, String>? get cred => _cred;
 
-  void setCred(Map<String, String>? cred) {
-    _cred = cred;
-    notifyListeners();
+  UserCredProvider({Map<String, String>? initialCred}) {
+    _cred = initialCred;
   }
+
+  void setCred(Map<String, String>? newCred) {
+    if (_cred != newCred) {
+      _cred = newCred;
+      notifyListeners();
+    }
+}
+
 
   // Destructor (dispose method) to clear credentials when the provider is disposed
   @override

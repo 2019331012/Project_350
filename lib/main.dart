@@ -7,6 +7,7 @@ import 'package:managment/data/model/entry.dart';
 import 'package:managment/data/savecred.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:managment/data/model/add_date.dart';
+import 'package:managment/widgets/bottomnavigationbar.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -19,22 +20,39 @@ void main() async {
   //await Hive.openBox<Map<String, String>>('credentialBox');
   await Firebase.initializeApp(); // Initialize HiveAdapter
   //runApp(const MyApp());
+
+  Credential? use = await getCredentialFromStorage();
+  Widget homeWidget = use != null ? Bottom() : MyLogin();
+
+  Map<String, String>? cred;
+  if (use?.name != null && use?.email != null) {
+    cred = {'name': use!.name, 'email': use.email};
+  }
+
   runApp(
     ChangeNotifierProvider(
-      create: (context) => UserCredProvider(),
-      child: MyApp(),
+      create: (context) => UserCredProvider(initialCred: cred),
+      child: MyApp(homeWidget : homeWidget),
     ),
   );
 }
 
+Future<Credential?> getCredentialFromStorage() async {
+  var credBox = Hive.box<Credential>('credBox');
+  return credBox.get(1);
+}
+
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  
+  final Widget homeWidget;
+
+  const MyApp({Key? key, required this.homeWidget}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyLogin(),
+      home: homeWidget,
       routes: {
         'register': (context) => MyRegister(),
         'login': (context) => MyLogin(),

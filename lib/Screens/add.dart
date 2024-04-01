@@ -106,7 +106,7 @@ class _Add_ScreenState extends State<Add_Screen> {
           child: TextField(
             keyboardType: TextInputType.text,
             onChanged: (value) {
-              double parsedValue = double.tryParse(value) ?? 0;
+              //double parsedValue = double.tryParse(value) ?? 0;
               entries[entryIndex].unitName = value;
             },
             decoration: InputDecoration(
