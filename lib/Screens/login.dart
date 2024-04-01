@@ -296,7 +296,8 @@ class _MyLoginState extends State<MyLogin> {
           QuerySnapshot dataCollectionSnapshot = await dataCollectionRef.get();
 
           dataCollectionSnapshot.docs.forEach((dataDoc) {
-            box.add(Add_data.fromMap(dataDoc.data() as Map<String, dynamic>));
+            Map<String, dynamic> map = {...dataDoc.data() as Map<String, dynamic>,...{'id': dataDoc.id}};
+            box.add(Add_data.fromMap(map));
           });
           // Print or use the retrieved data as needed
           print('User Name: $userName');

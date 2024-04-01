@@ -199,6 +199,10 @@ class _HomeState extends State<Home> {
     return Dismissible(
         key: UniqueKey(),
         onDismissed: (direction) {
+          firestore.collection('users')
+            .doc(user?.uid)
+            .collection('data')
+            .doc(history.documentId).delete();
           history.delete();
         },
         child: get(history));
