@@ -69,7 +69,7 @@ class _Add_ScreenState extends State<Add_Screen> {
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      height: calculateContainerHeight() + 300,
+      height: calculateContainerHeight() + 400,
       width: 500,
       child: Column(
         children: [
@@ -356,7 +356,7 @@ class _Add_ScreenState extends State<Add_Screen> {
             // Dropdown items for categories
             // Add logic to handle custom category if needed
             // category code is not working you can add it later
-            items: ['Food', 'Transfer', 'Transportation', 'Education'].map((category) {
+            items: ['Food', 'Transfer', 'Transportation', 'Education','Custom'].map((category) {
               return DropdownMenuItem<String>(
                 value: category,
                 child: Text(category),

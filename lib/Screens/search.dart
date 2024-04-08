@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:managment/data/model/add_date.dart';
-//import 'package:provider/provider.dart';
-//import 'package:flutter/services.dart' show rootBundle;
+import 'package:managment/Screens/item_details.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -33,6 +32,9 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Search'),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -49,9 +51,9 @@ class _SearchState extends State<Search> {
                   labelText: 'Search',
                   labelStyle: TextStyle(color: Colors.black),
                   enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 3, color: Color(0xffC5C5C5))),
+                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 3, color: Color(0xffC5C5C5))),
                   focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 3, color: Color(0xFF603300))),
+                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 3, color: Color(0xFF603300))),
                 ),
               ),
             ),
@@ -82,6 +84,14 @@ class _SearchState extends State<Search> {
                 itemBuilder: (context, index) {
                   final entry = filteredEntries[index];
                   return ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ItemDetailsPage(item: entry),
+                        ),
+                      );
+                    },
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
