@@ -20,12 +20,12 @@ class _Add_ScreenState extends State<Add_Screen> {
   final TextEditingController explainController = TextEditingController();
   final List<String> types = ['Income', 'Expense'];
   List<Entry> entries = [Entry('', 0.0, 0.0, 0.0)]; // Initial entry
-  List<Entry> filteredEntries = []; // New list for filtered entries
+  late List<Add_data> filteredEntries; // New list for filtered entries
   @override
   void initState() {
     super.initState();
     selectedItemi = types[0];
-    filteredEntries = entries.toList(); // Initialize filteredEntries with all entries
+    filteredEntries = box.values.toList(); // Initialize filteredEntries with all entries
   }
 
   double calculateContainerHeight() {
@@ -51,7 +51,7 @@ class _Add_ScreenState extends State<Add_Screen> {
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            backgroundContainer(context),
+            backgroundContainer(context), 
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(top: 100),
@@ -85,24 +85,6 @@ class _Add_ScreenState extends State<Add_Screen> {
           Spacer(),
           save(),
           SizedBox(height: 25),
-          // Add ListView to display search suggestions
-          if (filteredEntries.isNotEmpty)
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: filteredEntries.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(filteredEntries[index].unitName),
-                  onTap: () {
-                    // Set the selected suggestion in the TextField
-                    setState(() {
-                      explainController.text = filteredEntries[index].unitName;
-                      filteredEntries.clear(); // Clear suggestions after selection
-                    });
-                  },
-                );
-              },
-            ),
         ],
       ),
     );
@@ -122,23 +104,53 @@ class _Add_ScreenState extends State<Add_Screen> {
             color: Colors.white,
           ),
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
-            keyboardType: TextInputType.text,
-            onChanged: (value) {
-              //double parsedValue = double.tryParse(value) ?? 0;
-              entries[entryIndex].unitName = value;
-            },
-            decoration: InputDecoration(
-              labelText: 'Unit Name',
-              labelStyle: TextStyle(color: Colors.black),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
-              // Text color for the label
-            ),
-            cursorColor: Color(0xFF603300),
-            style: TextStyle(color: Colors.black), // Text color for the input text
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                keyboardType: TextInputType.text,
+                controller: TextEditingController(text: entries[entryIndex].unitName),
+                onChanged: (value) {
+                  //double parsedValue = double.tryParse(value) ?? 0;
+                  entries[entryIndex].unitName = value;
+                  setState(() {
+                    entries[entryIndex].unitName = value;
+                    filteredEntries = box.values.where((entry) =>
+                        entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Unit Name',
+                  labelStyle: TextStyle(color: Colors.black),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+                  // Text color for the label
+                ),
+                cursorColor: Color(0xFF603300),
+                style: TextStyle(color: Colors.black), // Text color for the input text
+              ),
+              // Add ListView to display search suggestions
+              if (filteredEntries.isNotEmpty)
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: filteredEntries.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(filteredEntries[index].entries.unitName),
+                      onTap: () {
+                        // Set the selected suggestion in the TextField
+                        setState(() {
+                          entries[entryIndex].unitName = filteredEntries[index].entries.unitName;
+                          explainController.text = filteredEntries[index].entries.unitName;
+                          filteredEntries.clear(); // Clear suggestions after selection
+                        });
+                      },
+                    );
+                  },
+                ),
+            ],
           ),
         ),
         SizedBox(height: 10),
