@@ -20,11 +20,12 @@ class _Add_ScreenState extends State<Add_Screen> {
   final TextEditingController explainController = TextEditingController();
   final List<String> types = ['Income', 'Expense'];
   List<Entry> entries = [Entry('', 0.0, 0.0, 0.0)]; // Initial entry
-
+  List<Entry> filteredEntries = []; // New list for filtered entries
   @override
   void initState() {
     super.initState();
     selectedItemi = types[0];
+    filteredEntries = entries.toList(); // Initialize filteredEntries with all entries
   }
 
   double calculateContainerHeight() {
@@ -63,7 +64,7 @@ class _Add_ScreenState extends State<Add_Screen> {
     );
   }
 
-  Widget mainContainer() {
+ Widget mainContainer() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -84,6 +85,24 @@ class _Add_ScreenState extends State<Add_Screen> {
           Spacer(),
           save(),
           SizedBox(height: 25),
+          // Add ListView to display search suggestions
+          if (filteredEntries.isNotEmpty)
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: filteredEntries.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(filteredEntries[index].unitName),
+                  onTap: () {
+                    // Set the selected suggestion in the TextField
+                    setState(() {
+                      explainController.text = filteredEntries[index].unitName;
+                      filteredEntries.clear(); // Clear suggestions after selection
+                    });
+                  },
+                );
+              },
+            ),
         ],
       ),
     );
