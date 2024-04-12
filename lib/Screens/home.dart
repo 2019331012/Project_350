@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:managment/data/dateAction.dart';
 import 'package:managment/data/model/add_date.dart';
 import 'package:managment/data/utlity.dart';
 import 'package:managment/data/savecred.dart';
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
               valueListenable: box.listenable(),
               builder: (context, value, child) {
 
-                List<DateTime> uniqueDates = getUniqueDates(); // Function to get unique dates from history
+                List<DateTime> uniqueDates = DateAction.getUniqueDates(box); // Function to get unique dates from history
 
                 return CustomScrollView(
                   slivers: [
@@ -100,7 +101,7 @@ class _HomeState extends State<Home> {
                         // childCount: box.length,
                         (context, index) {
                           DateTime currentDate = uniqueDates[index];
-                          List<Add_data> histories = getHistoriesByDate(currentDate); // Function to get histories by date
+                          List<Add_data> histories = DateAction.getHistoriesByDate(box, currentDate); // Function to get histories by date
                           return getHistoryGroup(currentDate, histories);
                         },
                         childCount: uniqueDates.length,
@@ -121,7 +122,7 @@ class _HomeState extends State<Home> {
     return Dismissible(
       key: Key(date.toString()), // Use date as the key for Dismissible
       onDismissed: (direction) {
-        deleteHistories(histories); // Function to delete histories
+        DateAction.deleteHistories(firestore, user, histories); // Function to delete histories
       },
       child: ExpansionTile(
         // title: Text(
@@ -155,44 +156,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void deleteHistories(List<Add_data> histories) {
-    for (var history in histories) {
-      firestore.collection('users')
-        .doc(user?.uid)
-        .collection('data')
-        .doc(history.documentId).delete();
-      history.delete(); // Delete each history item
-    }
-  }
-
-  List<DateTime> getUniqueDates() {
-    Set<DateTime> datesSet = Set();
-    box.values.forEach((history) {
-      datesSet.add(DateTime(
-        history.datetime.year,
-        history.datetime.month,
-        history.datetime.day,
-        history.datetime.hour,
-        history.datetime.minute,
-        history.datetime.second,
-        history.datetime.millisecond,
-        history.datetime.microsecond,
-      ));
-    });
-    return datesSet.toList()..sort((a, b) => b.compareTo(a)); // Sorting in descending order
-  }
-
-  List<Add_data> getHistoriesByDate(DateTime date) {
-    return box.values.where((history) =>
-        history.datetime.year == date.year &&
-        history.datetime.month == date.month &&
-        history.datetime.day == date.day &&
-        history.datetime.hour == date.hour &&
-        history.datetime.minute == date.minute &&
-        history.datetime.second == date.second &&
-        history.datetime.millisecond == date.millisecond &&
-        history.datetime.microsecond == date.microsecond).toList();
-  }
 
 
   Widget getList(Add_data history) {

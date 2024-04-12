@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:managment/data/dateAction.dart';
 import 'package:managment/data/utlity.dart';
 import 'package:managment/widgets/chart.dart';
-
 import '../data/model/add_date.dart';
 
 class Statistics extends StatefulWidget {
@@ -11,12 +11,21 @@ class Statistics extends StatefulWidget {
   State<Statistics> createState() => _StatisticsState();
 }
 
-ValueNotifier kj = ValueNotifier(0);
+ValueNotifier<int> kj = ValueNotifier(0);
 
 class _StatisticsState extends State<Statistics> {
-  List day = ['Day', 'Week', 'Month', 'Year'];
-  List f = [today(), week(), month(), year()];
-  List<Add_data> a = [];
+  List<String> day = ['Day', 'Week', 'Month', 'Year'];
+  final List<String> days = [
+    'Monday',
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    'friday',
+    'saturday',
+    'sunday'
+  ];
+
+  List<List<Add_data>> f = [today(), week(), month(), year()];
   int index_color = 0;
 
   @override
@@ -25,16 +34,18 @@ class _StatisticsState extends State<Statistics> {
       body: SafeArea(
         child: ValueListenableBuilder(
           valueListenable: kj,
-          builder: (BuildContext context, dynamic value, Widget? child) {
-            a = f[value];
-            return custom();
+          builder: (BuildContext context, int value, Widget? child) {
+            return custom(f[value]);
           },
         ),
       ),
     );
   }
 
-  CustomScrollView custom() {
+  Widget custom(List<Add_data> a) {
+    //Map<DateTime, List<Add_data>> groupedByDate = DateAction.getHistoriesByDate(a, );
+    List<DateTime> uniqueDates = DateAction.getUniqueDates(box);
+
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -121,39 +132,82 @@ class _StatisticsState extends State<Statistics> {
           ),
         ),
         SliverList(
-            delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return ListTile(
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image.asset('images/${a[index].name}.png', height: 40),
-              ),
-              title: Text(
-                a[index].name,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final DateTime dateTime = uniqueDates[index];
+              final List<Add_data> histories = DateAction.getHistoriesByDate(box, dateTime);
+              double total = calculateTotalAmount(histories);
+              return ExpansionTile(
+                leading: Icon(Icons.arrow_drop_down), // Add a down-arrow icon
+                title: Text(
+                  '${days[dateTime.weekday - 1]}  ${dateTime.year}-${dateTime.day}-${dateTime.month}',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              subtitle: Text(
-                ' ${a[index].datetime.year}-${a[index].datetime.day}-${a[index].datetime.month}',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
+                subtitle: Text(
+                  'Contains a List of entries of that time.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              trailing: Text(
-                '${a[index].entries.total}',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 19,
-                  color: a[index].IN == 'Income' ? Colors.green : Colors.red,
+                trailing: Text(
+                  '${total.abs()}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 19,
+                    color: /*history.IN == 'Income'*/ total>0 ? Colors.green : Colors.red,
+                  ),
                 ),
-              ),
-            );
-          },
-          childCount: a.length,
-        ))
+                children: [
+                  // ListTile(
+                  //   title: Text(
+                  //     '${dateTime.year}-${dateTime.month}-${dateTime.day}',
+                  //     style: TextStyle(
+                  //       fontSize: 20,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  ...histories.map((history) => ListTile(
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.asset('images/${history.name}.png',
+                              height: 40),
+                        ),
+                        title: Text(
+                          history.name,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: Text(
+                          '${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        trailing: Text(
+                          '${history.entries.total}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 19,
+                            color: history.IN == 'Income'
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                      )),
+                ],
+              );
+            },
+            childCount: uniqueDates.length,
+          ),
+        ),
       ],
     );
   }
+
 }
