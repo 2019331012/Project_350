@@ -259,11 +259,6 @@ class _HomeState extends State<Home> {
                             height: 40,
                             width: 40,
                             color: Color.fromRGBO(250, 250, 250, 0.1),
-                            child: Icon(
-                              Icons.notification_add_outlined,
-                              size: 30,
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                       ),
@@ -329,10 +324,6 @@ class _HomeState extends State<Home> {
                               fontSize: 16,
                               color: Colors.white,
                             ),
-                          ),
-                          Icon(
-                            Icons.more_horiz,
-                            color: Colors.white,
                           ),
                         ],
                       ),

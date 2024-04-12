@@ -267,20 +267,42 @@ class _Add_ScreenState extends State<Add_Screen> {
         GestureDetector(
           onTap: () async {
             // Your existing save logic
-            for (var entryIndex = 0; entryIndex < entries.length; entryIndex++) {
-              var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!, '');
+            if (entries.any((entry) => entry.unitName.isEmpty) || selectedItem == null) {
+              // Check if Unit Name or Category is missing
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Missing Information"),
+                    content: Text("Please make sure all the fields are filled."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              // Your existing save logic
               User? user = FirebaseAuth.instance.currentUser;
               if (user != null) {
                 try {
-                  DocumentReference docRef = await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('data').add(add.toMap());
-                  add.setDocumentId(docRef.id);
-                  box.add(add);
+                  for (var entryIndex = 0; entryIndex < entries.length; entryIndex++) {
+                    var add = Add_data(selectedItemi!, entries[entryIndex], date, explainController.text, selectedItem!, '');
+                    DocumentReference docRef = await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('data').add(add.toMap());
+                    add.setDocumentId(docRef.id);
+                    box.add(add);
+                  }
                 } catch (e) {
                   print('Error uploading user data: $e');
                 }
               }
+              Navigator.of(context).pop();
             }
-            Navigator.of(context).pop();
           },
           child: Container(
             alignment: Alignment.center,
