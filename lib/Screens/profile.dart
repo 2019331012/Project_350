@@ -11,8 +11,15 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('   Profile'),
-        automaticallyImplyLeading: false, // Remove the back arrow
+        title: Text('Profile',
+        style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+        automaticallyImplyLeading: false,
+        centerTitle: true, // Remove the back arrow
       ),
       body: CustomScrollView(
         slivers: [
