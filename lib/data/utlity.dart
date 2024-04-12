@@ -104,7 +104,7 @@ List<Add_data> year() {
 }
 
 double total_chart(List<Add_data> history2) {
-  List a = [0, 0];
+  List a = [0.0, 0.0];
 
   for (var i = 0; i < history2.length; i++) {
     a.add(history2[i].IN == 'Income'
