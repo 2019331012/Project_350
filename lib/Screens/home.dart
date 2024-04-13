@@ -250,18 +250,18 @@ class _HomeState extends State<Home> {
                   ),
                   child: Stack(
                     children: [
-                      Positioned(
-                        top: 35,
-                        left: 300,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            color: Color.fromRGBO(250, 250, 250, 0.1),
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   top: 35,
+                      //   left: 300,
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(7),
+                      //     child: Container(
+                      //       height: 100,
+                      //       width: 40,
+                      //       color: Color.fromRGBO(250, 250, 250, 0.1),
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.only(top: 35, left: 10),
                         child: Column(
@@ -293,7 +293,7 @@ class _HomeState extends State<Home> {
             ),
             Positioned(
               top: 140,
-              left: 30,
+              left: MediaQuery.of(context).size.width / 2 - 140,
               child: Container(
                 height: 170,
                 width: 280,
