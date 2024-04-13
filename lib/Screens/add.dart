@@ -112,7 +112,6 @@ class _Add_ScreenState extends State<Add_Screen> {
                 controller: TextEditingController(text: entries[entryIndex].unitName),
                 onChanged: (value) {
                   //double parsedValue = double.tryParse(value) ?? 0;
-                  entries[entryIndex].unitName = value;
                   setState(() {
                     entries[entryIndex].unitName = value;
                     filteredEntries = box.values.where((entry) =>
@@ -144,6 +143,7 @@ class _Add_ScreenState extends State<Add_Screen> {
                         setState(() {
                           entries[entryIndex].unitName = filteredEntries[index].entries.unitName;
                           explainController.text = filteredEntries[index].entries.unitName;
+                          explainController.selection = TextSelection.fromPosition(TextPosition(offset: explainController.text.length));
                           filteredEntries.clear(); // Clear suggestions after selection
                         });
                       },
