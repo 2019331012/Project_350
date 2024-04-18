@@ -118,6 +118,17 @@ class _HomeState extends State<Home> {
   Widget getHistoryGroup(DateTime date, List<Add_data> histories) {
 
     double total = calculateTotalAmount(histories);
+    String imagePath = 'images/${histories.map((history) => history.name).toSet().first}.png';
+    
+    // Check if the image exists, if not, use the default image
+    _imageExists(imagePath).then((exists) {
+      if (!exists) {
+        imagePath = 'images\custom.png';
+      }
+    });
+
+    //return ListTile(
+      
 
     return Dismissible(
       key: Key(date.toString()), // Use date as the key for Dismissible
@@ -129,20 +140,32 @@ class _HomeState extends State<Home> {
         //   '${day[date.weekday - 1]}  ${date.year}-${date.day}-${date.month}',
         //   style: TextStyle(fontWeight: FontWeight.w600),
         // ),
-        leading: Icon(Icons.arrow_drop_down), // Add a down-arrow icon
-        title: Text(
+        //Icon(Icons.arrow_drop_down),
+        leading:  ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Image.asset(imagePath, height: 40),
+        ),
+        title:Text(
+          '${histories.map((history) => history.name).toSet().first}',
+          //'food',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+          )
+         ) ,
+        subtitle: Text(
           '${day[date.weekday - 1]}  ${date.year}-${date.day}-${date.month}',
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w600,
           ),
         ),
-        subtitle: Text(
-          'Contains a List of entries of that time.',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        // subtitle: Text(
+        //   'Contains a List of entries of that time.',
+        //   style: TextStyle(
+        //     fontWeight: FontWeight.w600,
+        //   ),
+        // ),
         trailing: Text(
           '${total.abs()}',
           style: TextStyle(
@@ -181,33 +204,33 @@ class _HomeState extends State<Home> {
   }
 
   ListTile get(Add_data history) {
-    String imagePath = 'images/${history.name}.png';
+    // String imagePath = 'images/${history.name}.png';
     
-    // Check if the image exists, if not, use the default image
-    _imageExists(imagePath).then((exists) {
-      if (!exists) {
-        imagePath = 'images\custom.png';
-      }
-    });
+    // // Check if the image exists, if not, use the default image
+    // _imageExists(imagePath).then((exists) {
+    //   if (!exists) {
+    //     imagePath = 'images\custom.png';
+    //   }
+    // });
 
     return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: Image.asset(imagePath, height: 40),
-      ),
+    //   leading: ClipRRect(
+    //     borderRadius: BorderRadius.circular(5),
+    //     child: Image.asset(imagePath, height: 40),
+    //   ),
       title: Text(
-        history.name,
+        history.entries.unitName,
         style: TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w600,
         ),
       ),
-      subtitle: Text(
-        '${day[history.datetime.weekday - 1]}  ${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      // subtitle: Text(
+      //   '${history.entries.descripton}',
+      //   style: TextStyle(
+      //     fontWeight: FontWeight.w400,
+      //   ),
+      // ),
       trailing: Text(
         '${history.entries.total}',
         style: TextStyle(

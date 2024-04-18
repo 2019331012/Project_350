@@ -1,11 +1,9 @@
-<h1>Finance App</h1>
+<h1>Personal Finance Manager</h1>
 
 <h3>
-this project we create an awesome  Finance App UI and backend, hellll yeahhhhhhh korlam eita 4th, by pedo utsho and robot fahim.
+To run this app simply 
 </h3>
 <p>
-tutorial :
-https://www.youtube.com/watch?v=9-QFt-cWZV8&ab_channel=flutterskills
 </p>
 <hr>
 <div style = ""> 

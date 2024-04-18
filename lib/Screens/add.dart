@@ -19,24 +19,28 @@ class _Add_ScreenState extends State<Add_Screen> {
   String? selectedItemi;
   final TextEditingController explainController = TextEditingController();
   final List<String> types = ['Income', 'Expense'];
-  List<Entry> entries = [Entry('', 0.0, 0.0, 0.0)]; // Initial entry
-  late List<Add_data> filteredEntries; // New list for filtered entries
+  List<Entry> entries = [Entry('', 0.0, 0.0, 0.0)];
+  late List<Add_data> filteredEntries;
+  
+  int activeEntryIndex = -1; // New variable to track the active entry widget
+
   @override
   void initState() {
     super.initState();
-    selectedItemi = types[0];
-    filteredEntries = box.values.toSet().toList(); // Initialize filteredEntries with all entries
-    filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator, Add_data current) {
-    if (!accumulator.any((element) => element.entries.unitName == current.entries.unitName)) {
-      accumulator.add(current);
-    }
-    return accumulator;
-  });
+selectedItemi = types[0];
+filteredEntries = box.values.toSet().toList();
+Set<String> seenUnitNames = Set(); // Create a set to track seen unit names
+filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator, Add_data current) {
+  if (!seenUnitNames.contains(current.entries.unitName)) {
+    seenUnitNames.add(current.entries.unitName);
+    accumulator.add(current);
+  }
+  return accumulator;
+});
   }
 
   double calculateContainerHeight() {
     double entryWidgetHeight = 300.0;
-
     double totalHeight = (entries.length * entryWidgetHeight) + 250.0;
     return totalHeight;
   }
@@ -58,7 +62,7 @@ class _Add_ScreenState extends State<Add_Screen> {
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            backgroundContainer(context), 
+            backgroundContainer(context),
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(top: 100),
@@ -71,7 +75,7 @@ class _Add_ScreenState extends State<Add_Screen> {
     );
   }
 
- Widget mainContainer() {
+  Widget mainContainer() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -97,155 +101,198 @@ class _Add_ScreenState extends State<Add_Screen> {
     );
   }
 
-Widget entryWidget(int entryIndex) {
-  double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
-  entries[entryIndex].total = totalAmount;
-  TextEditingController unitNameController = TextEditingController(text: entries[entryIndex].unitName);
-
-  return Column(
-    children: [
-      Text('Entry ${entryIndex + 1}'),
-      SizedBox(height: 10),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              keyboardType: TextInputType.text,
-              controller: unitNameController,
-              onChanged: (value) {
-                setState(() {
-                  entries[entryIndex].unitName = value;
-                  filteredEntries = box.values.where((entry) =>
-                    entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
-                });
-                unitNameController.selection = TextSelection.fromPosition(TextPosition(offset: unitNameController.text.length));
-              },
-              decoration: InputDecoration(
-                labelText: 'Unit Name',
-                labelStyle: TextStyle(color: Colors.black),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
-                // Text color for the label
-              ),
-              cursorColor: Color(0xFF603300),
-              style: TextStyle(color: Colors.black), // Text color for the input text
-            ),
-          ],
-        ),
-      ),
-      if (filteredEntries.isNotEmpty)
+  Widget entryWidget(int entryIndex) {
+    double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
+    entries[entryIndex].total = totalAmount;
+    TextEditingController unitNameController = TextEditingController(text: entries[entryIndex].unitName);
+    //TextEditingController descriptionController = TextEditingController(text: entries[entryIndex].description); // New controller
+    return Column(
+      children: [
+        Text('Entry ${entryIndex + 1}'),
         SizedBox(height: 10),
-        Material(
-          elevation: 4, // Set elevation here
-          borderRadius: BorderRadius.circular(15),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: filteredEntries.length,
-            itemBuilder: (context, index) {
-              // Filter out duplicates by checking if the current suggestion is equal to the previous suggestion
-              if (index > 0 && filteredEntries[index].entries.unitName == filteredEntries[index - 1].entries.unitName) {
-                return SizedBox.shrink(); // Skip rendering if it's a duplicate
-              } else {
-                return ListTile(
-                  title: Text(filteredEntries[index].entries.unitName),
-                  onTap: () {
-                    // Set the selected suggestion in the TextField
-                    setState(() {
-                      entries[entryIndex].unitName = filteredEntries[index].entries.unitName;
-                      explainController.text = filteredEntries[index].entries.unitName;
-                      explainController.selection = TextSelection.fromPosition(TextPosition(offset: explainController.text.length));
-                      filteredEntries.clear(); // Clear suggestions after selection
-                    });
-                  },
-                );
-              }
-            },
-          ),
-        ),
-      SizedBox(height: 10),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            setState(() {
-              entries[entryIndex].unitPrice = double.tryParse(value) ?? 0;
-            });
-          },
-          decoration: InputDecoration(
-            labelText: 'Unit Price',
-            labelStyle: TextStyle(color: Colors.black),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
-            // Text color for the label
-          ),
-          cursorColor: Color(0xFF603300),
-          style: TextStyle(color: Colors.black), // Text color for the input text
-        ),
-      ),
-      SizedBox(height: 10),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            setState(() {
-              entries[entryIndex].quantity = double.tryParse(value) ?? 0;
-            });
-          },
-          decoration: InputDecoration(
-            labelText: 'Quantity',
-            labelStyle: TextStyle(color: Colors.black),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
-            // Text color for the label
-          ),
-          cursorColor: Color(0xFF603300),
-          style: TextStyle(color: Colors.black), // Text color for the input text
-        ),
-      ),
-      SizedBox(height: 20),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Color(0xFF603300),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Text(
-          'Unit Amount: ${totalAmount.toStringAsFixed(2)}', // Assuming you want to display totalAmount with 2 decimal places
-          style: TextStyle(
-            fontFamily: 'f',
-            fontWeight: FontWeight.w600,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
             color: Colors.white,
-            fontSize: 12,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                keyboardType: TextInputType.text,
+                controller: unitNameController,
+                onChanged: (value) {
+                setState(() {
+                    if (value.length > 1) {
+                // Shift the first character of the input to the end of the string
+                String modifiedValue = value.substring(1) + value[0];
+                
+                // Update the TextEditingController with the modified value
+                unitNameController.text = modifiedValue;
+                
+                // Set the cursor position to the end of the modified value
+                unitNameController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: modifiedValue.length)
+                );
+                
+                // Update the entry at the specified index with the modified text
+                entries[entryIndex].unitName = modifiedValue;
+
+                // Update filteredEntries based on the modified text
+                filteredEntries = box.values.where((entry) =>
+                    entry.entries.unitName.toLowerCase().contains(modifiedValue.toLowerCase())).toList();
+                } else {
+                    //activeEntryIndex = entryIndex; // Update active entry index
+                    filteredEntries = box.values.where((entry) =>
+                      entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
+                    entries[entryIndex].unitName = value;
+                }
+                  });
+                  //entries[entryIndex].unitName = value;
+                  //unitNameController.selection = TextSelection.fromPosition(TextPosition(offset: unitNameController.text.length));
+                },
+                decoration: InputDecoration(
+                  labelText: 'Unit Name',
+                  labelStyle: TextStyle(color: Colors.black),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+                ),
+                cursorColor: Color(0xFF603300),
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
           ),
         ),
-      ),
-      SizedBox(height: 20),
-    ],
-  );
-}
-
+        if (activeEntryIndex == entryIndex && filteredEntries.isNotEmpty)
+          SizedBox(height: 10),
+          Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(15),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: filteredEntries.length,
+              itemBuilder: (context, index) {
+                if (index > 0 && filteredEntries[index].entries.unitName == filteredEntries[index - 1].entries.unitName) {
+                  return SizedBox.shrink();
+                } else {
+                  return ListTile(
+                    title: Text(filteredEntries[index].entries.unitName),
+                    onTap: () {
+                      setState(() {
+                        entries[entryIndex].unitName = filteredEntries[index].entries.unitName;
+                        explainController.text = filteredEntries[index].entries.unitName;
+                        explainController.selection = TextSelection.fromPosition(TextPosition(offset: explainController.text.length));
+                        filteredEntries.clear();
+                      });
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        // SizedBox(height: 10),
+        // Container(
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(15),
+        //     color: Colors.white,
+        //   ),
+        //   padding: EdgeInsets.symmetric(horizontal: 10),
+        //   child: TextField(
+        //     keyboardType: TextInputType.text,
+        //     controller: descriptionController,
+        //     onChanged: (value) {
+        //       setState(() {
+        //         entries[entryIndex].description = value;;
+        //       });
+        //     },
+        //     decoration: InputDecoration(
+        //       labelText: 'Description',
+        //       labelStyle: TextStyle(color: Colors.black),
+        //       enabledBorder: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+        //       focusedBorder: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+        //     ),
+        //     cursorColor: Color(0xFF603300),
+        //     style: TextStyle(color: Colors.black),
+        //   ),
+        // ),
+        SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                entries[entryIndex].unitPrice = double.tryParse(value) ?? 0;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Unit Price',
+              labelStyle: TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+            ),
+            cursorColor: Color(0xFF603300),
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                entries[entryIndex].quantity = double.tryParse(value) ?? 0;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Quantity',
+              labelStyle: TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+            ),
+            cursorColor: Color(0xFF603300),
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        SizedBox(height: 20),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Color(0xFF603300),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            'Unit Amount: ${totalAmount.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontFamily: 'f',
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+      ],
+    );
+  }
 
   Widget addEntryButton() {
     return TextButton(
@@ -259,12 +306,10 @@ Widget entryWidget(int entryIndex) {
   }
 
   Widget save() {
-    double totalAmount = calculateTotalAmount(); // Calculate total amount
+    double totalAmount = calculateTotalAmount();
 
     return Column(
       children: [
-        // Display total amount
-
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -272,7 +317,7 @@ Widget entryWidget(int entryIndex) {
           ),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
-            'Total Amount: \$${totalAmount.toStringAsFixed(2)}', // Assuming you want to display totalAmount with 2 decimal places
+            'Total Amount: \$${totalAmount.toStringAsFixed(2)}',
             style: TextStyle(
               fontFamily: 'f',
               fontWeight: FontWeight.w600,
@@ -281,12 +326,10 @@ Widget entryWidget(int entryIndex) {
             ),
           ),
         ),
-        SizedBox(height: 10), // Add spacing
+        SizedBox(height: 10),
         GestureDetector(
           onTap: () async {
-            // Your existing save logic
             if (entries.any((entry) => entry.unitName.isEmpty) || selectedItem == null) {
-              // Check if Unit Name or Category is missing
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -305,7 +348,6 @@ Widget entryWidget(int entryIndex) {
                 },
               );
             } else {
-              // Your existing save logic
               User? user = FirebaseAuth.instance.currentUser;
               if (user != null) {
                 try {
@@ -424,10 +466,8 @@ Widget entryWidget(int entryIndex) {
                 selectedItem = value;
               });
             },
-            // Dropdown items for categories
-            // Add logic to handle custom category if needed
-            // category code is not working you can add it later
-            items: ['Food', 'Transfer', 'Transportation', 'Education','Custom'].map((category) {
+            items: ['Food', 'Transfer', 'Transportation', 'Education', 'Custom']
+                .map((category) {
               return DropdownMenuItem<String>(
                 value: category,
                 child: Text(category),
@@ -480,10 +520,10 @@ Widget entryWidget(int entryIndex) {
                     Icon(
                       Icons.attach_file_outlined,
                       color: Colors.white,
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

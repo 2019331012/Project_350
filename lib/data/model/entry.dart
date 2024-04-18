@@ -6,6 +6,7 @@ class Entry {
   double quantity;
   double total;
 
+
   Entry(this.unitName, this.unitPrice, this.quantity, this.total);
 
   factory Entry.fromMap(Map<String, dynamic> map) {
