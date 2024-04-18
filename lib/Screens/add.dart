@@ -104,7 +104,8 @@ filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator
   Widget entryWidget(int entryIndex) {
     double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
     entries[entryIndex].total = totalAmount;
-    //TextEditingController unitNameController = TextEditingController(text: entries[entryIndex].unitName);
+    //String unitName = '';
+    TextEditingController unitNameController = TextEditingController();//TextEditingController(text: entries[entryIndex].unitName);
     //TextEditingController descriptionController = TextEditingController(text: entries[entryIndex].description); // New controller
     return Column(
       children: [
@@ -125,7 +126,9 @@ filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator
                 onChanged: (value) {
                   setState(() {
                     // Update the entry at the specified index with the new value
+                    //unitNameController.text = value;
                     entries[entryIndex].unitName = value;
+                    //unitName = value;
                     
                     // Update filteredEntries based on the new value
                     filteredEntries = box.values.where((entry) =>
@@ -242,7 +245,8 @@ filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator
                       setState(() {
                         entries[entryIndex].unitName = filteredEntries[index].entries.unitName;
                         explainController.text = filteredEntries[index].entries.unitName;
-                        explainController.selection = TextSelection.fromPosition(TextPosition(offset: explainController.text.length));
+                        //unitNameController.text = filteredEntries[index].entries.unitName;
+                        //explainController.selection = TextSelection.fromPosition(TextPosition(offset: explainController.text.length));
                         filteredEntries.clear();
                       });
                     },
