@@ -466,7 +466,7 @@ filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator
                 selectedItem = value;
               });
             },
-            items: ['Food', 'Transfer', 'Transportation', 'Education', 'Custom']
+            items: ['Childcare', 'Clothing', 'Debt', 'Education', 'Entertainment', 'Food', 'Gifts and Donations', 'Groceries', 'Healthcare', 'Hobbies', 'Household Supplies', 'Housing', 'Insurance', 'Personal Care', 'Pets', 'Professional Development', 'Savings', 'Subscriptions', 'Transportation', 'Travel', 'Utilities', 'Work-Related', 'Transfer', 'Miscellaneous']
                 .map((category) {
               return DropdownMenuItem<String>(
                 value: category,

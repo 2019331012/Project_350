@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
     // Check if the image exists, if not, use the default image
     _imageExists(imagePath).then((exists) {
       if (!exists) {
-        imagePath = 'images\custom.png';
+        imagePath = 'images\Miscellaneous.png';
       }
     });
 

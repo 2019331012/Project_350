@@ -55,16 +55,33 @@ double expenses() {
 }
 
 List<Add_data> today() {
-  List<Add_data> a = [];
-  var history2 = box.values.toList();
-  DateTime date = new DateTime.now();
-  for (var i = 0; i < history2.length; i++) {
-    if (history2[i].datetime.day == date.day) {
-      a.add(history2[i]);
+    // Create a list to store data for today
+    List<Add_data> dataForToday = [];
+    
+    // Get the current date and time
+    DateTime currentDate = DateTime.now();
+
+    // Retrieve all entries from the box
+    var history = box.values.toList();
+
+    // Iterate through the history data
+    for (var entry in history) {
+        // Compare day, month, and year to ensure the same date
+        if (entry.datetime.day == currentDate.day &&
+            entry.datetime.month == currentDate.month &&
+            entry.datetime.year == currentDate.year) {
+            // If the entry's date matches today's date, add it to the list
+            dataForToday.add(entry);
+        }
     }
-  }
-  return a;
+
+    // Sort the list based on the hour component of each entry's datetime attribute
+    dataForToday.sort((a, b) => a.datetime.hour.compareTo(b.datetime.hour));
+
+    // Return the list of data for today, sorted by hour
+    return dataForToday;
 }
+
 
 List<Add_data> week() {
   List<Add_data> a = [];
