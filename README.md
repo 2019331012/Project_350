@@ -1,9 +1,12 @@
 <h1>Personal Finance Manager</h1>
 
 <h3>
-Download the apk and install in android. 
+Download the apk from the QR code or from release and install in android. Then you are good to go.
 </h3>
 <p>
+  <div>
+    <img src="https://github.com/2019331012/Project_350/assets/62371000/a7e4ec7f-dbfe-4b9b-9829-4307c76563fc" alt="Qr" width="50%/>
+  </div>
 </p>
 <hr>
 <div style = ""> 
