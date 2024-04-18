@@ -104,7 +104,7 @@ filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator
   Widget entryWidget(int entryIndex) {
     double totalAmount = entries[entryIndex].unitPrice * entries[entryIndex].quantity;
     entries[entryIndex].total = totalAmount;
-    TextEditingController unitNameController = TextEditingController(text: entries[entryIndex].unitName);
+    //TextEditingController unitNameController = TextEditingController(text: entries[entryIndex].unitName);
     //TextEditingController descriptionController = TextEditingController(text: entries[entryIndex].description); // New controller
     return Column(
       children: [
@@ -121,52 +121,110 @@ filteredEntries = filteredEntries.fold(<Add_data>[], (List<Add_data> accumulator
             children: [
               TextField(
                 keyboardType: TextInputType.text,
-                controller: unitNameController,
+                //controller: unitNameController,
                 onChanged: (value) {
-                setState(() {
-                    if (value.length > 1) {
-                // Shift the first character of the input to the end of the string
-                String modifiedValue = value.substring(1) + value[0];
-                
-                // Update the TextEditingController with the modified value
-                unitNameController.text = modifiedValue;
-                
-                // Set the cursor position to the end of the modified value
-                unitNameController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: modifiedValue.length)
-                );
-                
-                // Update the entry at the specified index with the modified text
-                entries[entryIndex].unitName = modifiedValue;
-
-                // Update filteredEntries based on the modified text
-                filteredEntries = box.values.where((entry) =>
-                    entry.entries.unitName.toLowerCase().contains(modifiedValue.toLowerCase())).toList();
-                } else {
-                    //activeEntryIndex = entryIndex; // Update active entry index
-                    filteredEntries = box.values.where((entry) =>
-                      entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
+                  setState(() {
+                    // Update the entry at the specified index with the new value
                     entries[entryIndex].unitName = value;
-                }
+                    
+                    // Update filteredEntries based on the new value
+                    filteredEntries = box.values.where((entry) =>
+                        entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
                   });
-                  //entries[entryIndex].unitName = value;
-                  //unitNameController.selection = TextSelection.fromPosition(TextPosition(offset: unitNameController.text.length));
+                  // setState(() {
+                  //   if (value.length > 1) {
+                  //     // Shift the first character of the input to the end of the string
+                  //     String modifiedValue = value.substring(1) + value[0];
+                      
+                  //     // Update the TextEditingController with the modified value
+                  //     unitNameController.value = TextEditingValue(
+                  //       text: modifiedValue,
+                  //       selection: TextSelection.collapsed(offset: modifiedValue.length),
+                  //     );
+                      
+                  //     // Update the entry at the specified index with the modified text
+                  //     entries[entryIndex].unitName = modifiedValue;
+
+                  //     // Update filteredEntries based on the modified text
+                  //     filteredEntries = box.values.where((entry) =>
+                  //         entry.entries.unitName.toLowerCase().contains(modifiedValue.toLowerCase())).toList();
+                  //   } else {
+                  //     // Update the TextEditingController with the value
+                  //     unitNameController.text = value;
+                      
+                  //     // Update the entry at the specified index with the value
+                  //     entries[entryIndex].unitName = value;
+
+                  //     // Update filteredEntries based on the value
+                  //     filteredEntries = box.values.where((entry) =>
+                  //         entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
+                  //   }
+                  // });
                 },
                 decoration: InputDecoration(
                   labelText: 'Unit Name',
                   labelStyle: TextStyle(color: Colors.black),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))
+                  ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(width: 2, color: Color(0xFF603300))
+                  ),
                 ),
                 cursorColor: Color(0xFF603300),
                 style: TextStyle(color: Colors.black),
               ),
+
+              // TextField(
+              //   keyboardType: TextInputType.text,
+              //   controller: unitNameController,
+              //   onChanged: (value) {
+              //   setState(() {
+              //       if (value.length > 1) {
+              //   // Shift the first character of the input to the end of the string
+              //   String modifiedValue = value.substring(1) + value[0];
+                
+              //   // Update the TextEditingController with the modified value
+              //   unitNameController.text = modifiedValue;
+                
+              //   // Set the cursor position to the end of the modified value
+              //   unitNameController.selection = TextSelection.fromPosition(
+              //       TextPosition(offset: modifiedValue.length)
+              //   );
+                
+              //   // Update the entry at the specified index with the modified text
+              //   entries[entryIndex].unitName = modifiedValue;
+
+              //   // Update filteredEntries based on the modified text
+              //   filteredEntries = box.values.where((entry) =>
+              //       entry.entries.unitName.toLowerCase().contains(modifiedValue.toLowerCase())).toList();
+              //   } else {
+              //       //activeEntryIndex = entryIndex; // Update active entry index
+              //       filteredEntries = box.values.where((entry) =>
+              //         entry.entries.unitName.toLowerCase().contains(value.toLowerCase())).toList();
+              //       entries[entryIndex].unitName = value;
+              //   }
+              //     });
+              //     //entries[entryIndex].unitName = value;
+              //     //unitNameController.selection = TextSelection.fromPosition(TextPosition(offset: unitNameController.text.length));
+              //   },
+              //   decoration: InputDecoration(
+              //     labelText: 'Unit Name',
+              //     labelStyle: TextStyle(color: Colors.black),
+              //     enabledBorder: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+              //     focusedBorder: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 2, color: Color(0xFF603300))),
+              //   ),
+              //   cursorColor: Color(0xFF603300),
+              //   style: TextStyle(color: Colors.black),
+              // ),
             ],
           ),
         ),
-        if (activeEntryIndex == entryIndex && filteredEntries.isNotEmpty)
+        //if (activeEntryIndex == entryIndex && filteredEntries.isNotEmpty)
           SizedBox(height: 10),
           Material(
             elevation: 4,
