@@ -242,12 +242,4 @@ class _StatisticsState extends State<Statistics> {
         });
         return sortedHistories;
     }
-
-    double calculateTotalAmount(List<Add_data> histories) {
-        double total = 0;
-        for (Add_data history in histories) {
-            total += history.entries.total;
-        }
-        return total;
-    }
 }
